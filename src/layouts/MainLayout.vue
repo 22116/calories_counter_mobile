@@ -12,10 +12,10 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Counter
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div>v1.0.0</div>
       </q-toolbar>
     </q-header>
 
@@ -30,7 +30,7 @@
           header
           class="text-grey-8"
         >
-          Essential Links
+          Navigator
         </q-item-label>
         <EssentialLink
           v-for="link in essentialLinks"
@@ -51,17 +51,22 @@ import EssentialLink from 'components/EssentialLink.vue'
 
 const linksData = [
   {
-    title: 'History',
-    caption: 'Check by day',
-    icon: 'calendar_today',
-    link: '/history'
+    title: 'Main',
+    icon: 'api',
+    link: '/'
   },
-  {
-    title: 'Settings',
-    caption: 'Change dairy limit...',
-    icon: 'settings',
-    link: '/settings'
-  },
+  // {
+  //   title: 'History',
+  //   caption: 'Check by day',
+  //   icon: 'calendar_today',
+  //   link: '/history'
+  // },
+  // {
+  //   title: 'Settings',
+  //   caption: 'Change dairy limit...',
+  //   icon: 'settings',
+  //   link: '/settings'
+  // },
 ];
 
 import { Vue, Component } from 'vue-property-decorator';

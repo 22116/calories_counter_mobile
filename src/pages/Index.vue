@@ -1,11 +1,11 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <counter :limit=1000></counter>
+    <counter></counter>
   </q-page>
 </template>
 
 <script lang="ts">
-import Counter from 'components/ClassComponent.vue';
+import Counter from 'components/Counter.vue';
 import { Vue, Component } from 'vue-property-decorator';
 
 @Component({

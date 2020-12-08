@@ -1,33 +1,23 @@
 import { store } from 'quasar/wrappers';
 import Vuex from 'vuex';
-
-// import example from './module-example';
-// import { ExampleStateInterface } from './module-example/state';
-
-/*
- * If not building with SSR mode, you can
- * directly export the Store instantiation
- */
+import defaultStore from './calories';
+import { StoreInterface } from './calories/state';
 
 export interface StateInterface {
-  // Define your own store structure, using submodules if needed
-  // example: ExampleStateInterface;
-  // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown;
+  calories: StoreInterface;
 }
 
 export default store(function ({ Vue }) {
   Vue.use(Vuex);
 
-  const Store = new Vuex.Store<StateInterface>({
+  return new Vuex.Store<StateInterface>({
     modules: {
-      // example
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      calories: defaultStore,
     },
 
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: !!process.env.DEBUGGING
   });
-
-  return Store;
 });
