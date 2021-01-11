@@ -1,6 +1,6 @@
-# Simple Calories Counter (calories-counter-android)
+# Daily Counter
 
-Application to count calories or something else
+Application for counter creation. These counters reset each day
 
 ## Install the dependencies
 ```bash
@@ -19,7 +19,7 @@ npm run lint
 
 ### Build the app for production
 ```bash
-quasar build
+npm run build
 ```
 
 ### Customize the configuration

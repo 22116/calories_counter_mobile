@@ -1,10 +1,10 @@
 import { store } from 'quasar/wrappers';
 import Vuex from 'vuex';
-import defaultStore from './calories';
-import { StoreInterface } from './calories/state';
+import persistentStore from './persistent';
+import { PersistentStoreInterface } from './persistent/state';
 
 export interface StateInterface {
-  calories: StoreInterface;
+  persistent: PersistentStoreInterface;
 }
 
 export default store(function ({ Vue }) {
@@ -13,7 +13,7 @@ export default store(function ({ Vue }) {
   return new Vuex.Store<StateInterface>({
     modules: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      calories: defaultStore,
+      persistent: persistentStore,
     },
 
     // enable strict mode (adds overhead!)

@@ -11,11 +11,8 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
 
-        <q-toolbar-title>
-          Counter
-        </q-toolbar-title>
-
-        <div>v1.0.0</div>
+        <div class="col"></div>
+        <div class="col-auto">{{ new Date().toDateString() }}</div>
       </q-toolbar>
     </q-header>
 
@@ -23,59 +20,132 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      content-class="bg-grey-1"
+      content-class="sidebar-content"
+      :dark="$q.dark === true"
     >
       <q-list>
         <q-item-label
           header
           class="text-grey-8"
         >
-          Navigator
+          Navigation menu
         </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
+        <q-slide-item v-for="link in counterLinks" :key="link.title" left-color="red" @left="onCounterDelete(link.hash)">
+          <EssentialLink v-bind="link" />
+          <template v-slot:left>
+            Delete
+            <q-icon name="delete" />
+          </template>
+        </q-slide-item>
+        <q-item>
+          <q-item-section>
+            <create-counter @success="counterCreated" />
+          </q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section class="text-center text-grey">
+            Swipe right to delete
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view :key="$route.fullPath" />
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksData = [
-  {
-    title: 'Main',
-    icon: 'api',
-    link: '/'
-  },
-  // {
-  //   title: 'History',
-  //   caption: 'Check by day',
-  //   icon: 'calendar_today',
-  //   link: '/history'
-  // },
-  // {
-  //   title: 'Settings',
-  //   caption: 'Change dairy limit...',
-  //   icon: 'settings',
-  //   link: '/settings'
-  // },
-];
-
-import { Vue, Component } from 'vue-property-decorator';
+import EssentialLink from 'components/helpers/EssentialLink.vue'
+import { Component, Vue } from 'vue-property-decorator';
+import { Hash, Profile } from 'src/store/persistent/state';
+import { Counter } from 'src/store/persistent/counters-models';
+import CreateCounter from 'components/modals/CreateCounter.vue';
 
 @Component({
-  components: { EssentialLink }
+  components: { CreateCounter, EssentialLink }
 })
 export default class MainLayout extends Vue {
-  leftDrawerOpen = false;
-  essentialLinks = linksData;
+  public leftDrawerOpen = false;
+  public essentialLinks = [
+    {
+      title: 'History',
+      caption: 'Check by day',
+      icon: 'calendar_today',
+      link: '/history'
+    },
+    {
+      title: 'Settings',
+      caption: 'Change application preferences',
+      icon: 'settings',
+      link: '/settings'
+    },
+  ];
+  public counterLinks: Array<{ hash: string }> = [];
+  public counters: Record<Hash, Counter>;
+
+  constructor() {
+    super();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    this.counters = this.$store.getters['persistent/userCounters'];
+
+    for (let hash in this.counters) {
+      this.counterLinks.push(this.createCounterLink(this.counters[hash], hash));
+    }
+
+    console.log('User counters:', this.counters)
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const profile = Object.assign(this.$store.getters['persistent/profile']) as Profile;
+
+    console.log(profile);
+
+    if (profile.dark !== null) {
+      this.$q.dark.set(profile.dark);
+    }
+  }
+
+  counterCreated(counter: Counter) {
+    void this.$store.dispatch('persistent/addCounter', counter);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const hashes = Object.keys(this.$store.getters['persistent/userCounters']);
+    const hash = hashes[hashes.length - 1];
+
+    this.counterLinks.push(this.createCounterLink(counter, hash));
+  }
+
+  onCounterDelete(hash: Hash) {
+    console.log('Delete counter by hash', hash);
+
+    void this.$store.dispatch('persistent/removeCounter', hash);
+
+    const index = this.counterLinks.findIndex((data) => data.hash === hash);
+
+    console.log(index, Number.isInteger(index));
+
+    if (Number.isInteger(index)) {
+      this.counterLinks.splice(index, 1);
+    }
+  }
+
+  private createCounterLink(counter: Counter, hash: Hash) {
+    return {
+      title: counter.name,
+      caption: counter.description,
+      icon: counter.icon,
+      link: `/counter/${hash}/${new Date().toDateString()}`,
+      hash
+    };
+  }
 }
 </script>
+
+<style lang="sass">
+.body--dark
+  div.sidebar-content
+    background: #1e1e1e !important
+</style>

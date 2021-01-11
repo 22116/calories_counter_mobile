@@ -4,5 +4,8 @@
     "baseUrl": ".",
     "experimentalDecorators": true,
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

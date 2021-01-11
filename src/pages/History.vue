@@ -1,10 +1,12 @@
 <template>
-  <p>History</p>
+  <q-page class="row items-center justify-evenly text-h1">
+    History (TODO)
+  </q-page>
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-property-decorator';
+import { Vue, Component } from 'vue-property-decorator';
 
-export default class PageHistory extends Vue {
-};
+@Component
+export default class PageHistory extends Vue {};
 </script>

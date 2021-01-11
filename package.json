@@ -1,13 +1,17 @@
 {
-  "name": "calories-counter-android",
-  "version": "0.0.1",
-  "description": "Application to count calories or something else",
-  "productName": "Simple Calories Counter",
+  "name": "daily-counter-android",
+  "version": "0.1.1",
+  "description": "Application to count something for a daily basis or something else",
+  "productName": "Daily Counter",
   "author": "victor.fedorenko <victor.fedorenko@mgid.com>",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js,.ts,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "lint": "eslint --ext .js,.ts,.vue ./src",
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build --mode capacitor --target android",
+    "genkey": "keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 20000",
+    "sign": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore ./dist/capacitor/android/apk/release/app-release-unsigned.apk alias_name"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

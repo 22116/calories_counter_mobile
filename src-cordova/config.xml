@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.lsbproject.counter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Simple Calories Counter</name>
-    <description>Application to count calories or something else</description>
+<widget id="com.lsbproject.counter" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Daily Counter</name>
+    <description>Application to count something for a daily basis or something else</description>
     <author email="fedorenko22116@gmail.com">
         Victor Fedorenko
     </author>
