@@ -8,6 +8,7 @@ export interface Counter {
   description: string,
   type: CounterType,
   icon: string | null,
+  createdAt: string | null,
   [key: string]: unknown
 }
 

@@ -5,15 +5,16 @@
 </template>
 
 <script lang="ts">
-import { Component, PropSync, Vue } from 'vue-property-decorator';
+import { Component, Emit, PropSync, Vue } from 'vue-property-decorator';
 import { BinaryCounter as BinaryCounterType } from 'src/store/persistent/counters-models';
 
 @Component
 export default class BinaryCounter extends Vue {
   @PropSync('counter', { type: Object, required: true }) public counterSync!: BinaryCounterType;
 
+  @Emit('update:counter')
   counterUpdated() {
-    this.$emit('update:counter', this.counterSync);
+    return this.counterSync;
   }
 }
 </script>

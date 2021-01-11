@@ -66,7 +66,9 @@ export default class CreateCounter extends Vue {
     name: '',
     description: '',
     type: CounterType.Binary,
-    icon: 'label'
+    icon: 'label',
+    value: false,
+    createdAt: new Date().toDateString()
   };
   public type = {
     label: 'Binary',

@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, PropSync } from 'vue-property-decorator';
+import { Vue, Component, PropSync, Emit } from 'vue-property-decorator';
 import AddButton from 'components/helpers/modals/AddButton.vue';
 import Confirm from 'components/helpers/modals/Confirm.vue';
 import { LimitedCounter as LimitedCounterType } from 'src/store/persistent/counters-models';
@@ -34,14 +34,18 @@ import { LimitedCounter as LimitedCounterType } from 'src/store/persistent/count
 export default class LimitedCounter extends Vue {
   @PropSync('counter', { type: Object, required: true }) public counterSync!: LimitedCounterType;
 
+  @Emit('update:counter')
   add(current: number) {
     this.counterSync.current += current;
-    this.$emit('update:counter', this.counterSync);
+
+    return this.counterSync;
   }
 
+  @Emit('update:counter')
   reset() {
     this.counterSync.current = 0;
-    this.$emit('update:counter', this.counterSync);
+
+    return this.counterSync;
   }
 }
 </script>

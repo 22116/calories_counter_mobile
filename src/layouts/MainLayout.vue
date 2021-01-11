@@ -12,7 +12,14 @@
         />
 
         <div class="col"></div>
-        <div class="col-auto">{{ new Date().toDateString() }}</div>
+        <div class="col-auto">
+          <template v-if="this.$route.params.date">
+            {{ new Date(this.$route.params.date).toDateString() }}
+          </template>
+          <template v-else>
+            {{ new Date().toDateString() }}
+          </template>
+        </div>
       </q-toolbar>
     </q-header>
 
