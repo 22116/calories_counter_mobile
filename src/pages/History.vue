@@ -5,7 +5,6 @@
         v-model="date"
         :events="events"
         :event-color="eventColor"
-        :landscape="true"
         class="full-width"
         id="calendar"
       />
