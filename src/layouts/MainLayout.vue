@@ -38,7 +38,7 @@
           Navigation menu
         </q-item-label>
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
-        <q-slide-item v-for="link in counterLinks" :key="link.title" left-color="red" @left="onCounterDelete(link.hash)">
+        <q-slide-item v-for="link in counterLinksSync" :key="link.title" left-color="red" @left="onCounterDelete(link.hash)">
           <EssentialLink v-bind="link" />
           <template v-slot:left>
             Delete
@@ -92,61 +92,61 @@ export default class MainLayout extends Vue {
   ];
   public counterLinks: Array<{ hash: string }> = [];
   public counters: Record<Hash, Counter>;
+  public date = new Date();
+  public timer: number;
 
-  constructor() {
+  public constructor() {
     super();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     this.counters = this.$store.getters['persistent/userCounters'];
 
-    for (let hash in this.counters) {
-      this.counterLinks.push(this.createCounterLink(this.counters[hash], hash));
-    }
-
-    console.log('User counters:', this.counters)
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const profile = Object.assign(this.$store.getters['persistent/profile']) as Profile;
-
-    console.log(profile);
 
     if (profile.dark !== null) {
       this.$q.dark.set(profile.dark);
     }
+
+    this.timer = window.setInterval(() => this.date = new Date(), 1000);
   }
 
-  counterCreated(counter: Counter) {
+  public get counterLinksSync() {
+    this.counterLinks = [];
+
+    for (let hash in this.counters) {
+      this.counterLinks.push(this.createCounterLink(this.counters[hash], hash, this.date));
+    }
+
+    return this.counterLinks;
+  }
+
+  public counterCreated(counter: Counter) {
     void this.$store.dispatch('persistent/addCounter', counter);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const hashes = Object.keys(this.$store.getters['persistent/userCounters']);
-    const hash = hashes[hashes.length - 1];
-
-    this.counterLinks.push(this.createCounterLink(counter, hash));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    this.counters = this.$store.getters['persistent/userCounters'];
   }
 
-  onCounterDelete(hash: Hash) {
-    console.log('Delete counter by hash', hash);
-
+  public onCounterDelete(hash: Hash) {
     void this.$store.dispatch('persistent/removeCounter', hash);
 
-    const index = this.counterLinks.findIndex((data) => data.hash === hash);
-
-    console.log(index, Number.isInteger(index));
-
-    if (Number.isInteger(index)) {
-      this.counterLinks.splice(index, 1);
-    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    this.counters = this.$store.getters['persistent/userCounters'];
   }
 
-  private createCounterLink(counter: Counter, hash: Hash) {
+  public createCounterLink(counter: Counter, hash: Hash, date: Date) {
     return {
       title: counter.name,
       caption: counter.description,
       icon: counter.icon,
-      link: `/counter/${hash}/${new Date().toDateString()}`,
+      link: `/counter/${hash}/${date.toDateString()}`,
       hash
     };
+  }
+
+  public beforeDestroy() {
+    clearInterval(this.timer);
   }
 }
 </script>
