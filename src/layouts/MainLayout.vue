@@ -17,7 +17,7 @@
             {{ new Date(this.$route.params.date).toDateString() }}
           </template>
           <template v-else>
-            {{ new Date().toDateString() }}
+            {{ date.toDateString() }}
           </template>
         </div>
       </q-toolbar>
