@@ -36,10 +36,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import { dateFormat } from 'src/other/helper';
-import { History } from 'src/store/persistent/state';
-import { CounterType } from 'src/store/persistent/counters-models';
+import { Vue, Component, Watch } from 'vue-property-decorator'
+import { dateFormat } from 'src/other/helper'
+import { History } from 'src/store/persistent/state'
+import { CounterType } from 'src/store/persistent/counters-models'
 
 type Option = {label: string, value: string};
 
@@ -57,15 +57,15 @@ export default class PageHistory extends Vue {
   public counterOptions: Array<Option> = [];
 
   public constructor() {
-    super();
+    super()
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
-    this.history = this.$store.getters['persistent/history'];
+    this.history = this.$store.getters['persistent/history']
     this.events = Object.keys(this.history).map((date: string) => dateFormat(new Date(date), this.FORMAT))
   }
 
   public eventColor(date: string): string {
-    const day = this.history[new Date(date).toDateString()];
+    const day = this.history[new Date(date).toDateString()]
 
     for (let hash in day.counters) {
       const counter = day.counters[hash]
@@ -77,16 +77,16 @@ export default class PageHistory extends Vue {
       }
     }
 
-    return 'green';
+    return 'green'
   }
 
   @Watch('date')
   public dateChanged(date: string|null) {
-    const today = new Date().toDateString();
+    const today = new Date().toDateString()
 
     if (date !== null && new Date(date).toDateString() !== today && this.history[new Date(date).toDateString()]) {
-      const counters = this.history[new Date(date).toDateString()].counters;
-      this.counterOptions = [];
+      const counters = this.history[new Date(date).toDateString()].counters
+      this.counterOptions = []
 
       for (let hash in counters) {
         this.counterOptions.push({
@@ -95,7 +95,7 @@ export default class PageHistory extends Vue {
         })
       }
 
-      this.prompt = true;
+      this.prompt = true
     }
   }
 

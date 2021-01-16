@@ -68,13 +68,14 @@ module.exports = {
     __statics: true,
     process: true,
     Capacitor: true,
-    chrome: true
+    chrome: true,
   },
 
   // add your custom rules here
   rules: {
     'prefer-promise-reject-errors': 'off',
 
+    semi: [2, "never"],
     // TypeScript
     quotes: ['warn', 'single', { avoidEscape: true }],
     '@typescript-eslint/explicit-function-return-type': 'off',

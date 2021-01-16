@@ -23,10 +23,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, PropSync, Emit } from 'vue-property-decorator';
-import AddButton from 'components/helpers/modals/AddButton.vue';
-import Confirm from 'components/helpers/modals/Confirm.vue';
-import { LimitedCounter as LimitedCounterType } from 'src/store/persistent/counters-models';
+import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
+import AddButton from 'components/helpers/modals/AddButton.vue'
+import Confirm from 'components/helpers/modals/Confirm.vue'
+import { LimitedCounter as LimitedCounterType } from 'src/store/persistent/counters-models'
 
 @Component({
   components: { Confirm, AddButton }
@@ -36,16 +36,16 @@ export default class LimitedCounter extends Vue {
 
   @Emit('update:counter')
   add(current: number) {
-    this.counterSync.current += current;
+    this.counterSync.current += current
 
-    return this.counterSync;
+    return this.counterSync
   }
 
   @Emit('update:counter')
   reset() {
-    this.counterSync.current = 0;
+    this.counterSync.current = 0
 
-    return this.counterSync;
+    return this.counterSync
   }
 }
 </script>

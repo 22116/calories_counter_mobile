@@ -1,16 +1,16 @@
-import { Module } from 'vuex';
-import { StateInterface } from '../index';
-import state, { PersistentStoreInterface } from './state';
-import actions from './actions';
-import getters from './getters';
-import mutations from './mutations';
+import { Module } from 'vuex'
+import { StateInterface } from '../index'
+import state, { PersistentStoreInterface } from './state'
+import actions from './actions'
+import getters from './getters'
+import mutations from './mutations'
 
-const exampleModule: Module<PersistentStoreInterface, StateInterface> = {
+const persistentModule: Module<PersistentStoreInterface, StateInterface> = {
   namespaced: true,
   actions,
   getters,
   mutations,
   state
-};
+}
 
-export default exampleModule;
+export default persistentModule

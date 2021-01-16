@@ -1,4 +1,4 @@
-import { Counter } from 'src/store/persistent/counters-models';
+import { Counter } from 'src/store/persistent/counters-models'
 
 export type Hash = string;
 export type History = Record<string, DayData>;
@@ -25,6 +25,6 @@ const state: PersistentStoreInterface = {
   counters: {},
   history: {},
   version: 1
-};
+}
 
-export default state;
+export default state

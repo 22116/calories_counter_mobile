@@ -9,7 +9,7 @@ export interface Counter {
   description: string,
   type: CounterType,
   icon: string | null,
-  createdAt: string | null,
+  createdAt: string,
   [key: string]: unknown
 }
 

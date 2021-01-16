@@ -7,11 +7,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import { Counter, CounterType } from 'src/store/persistent/counters-models';
-import LimitedCounter from 'components/counters/LimitedCounter.vue';
-import BinaryCounter from 'components/counters/BinaryCounter.vue';
-import GoalCounter from 'components/counters/GoalCounter.vue';
+import { Component, Vue } from 'vue-property-decorator'
+import { Counter, CounterType } from 'src/store/persistent/counters-models'
+import LimitedCounter from 'components/counters/LimitedCounter.vue'
+import BinaryCounter from 'components/counters/BinaryCounter.vue'
+import GoalCounter from 'components/counters/GoalCounter.vue'
 
 @Component({
   components: {GoalCounter, BinaryCounter, LimitedCounter }
@@ -20,35 +20,35 @@ export default class PageIndex extends Vue {
   public counter!: Counter;
 
   public constructor() {
-    super();
+    super()
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     this.counter = this.$store.getters['persistent/counterByHash'](
       new Date(this.$route.params.date),
       this.$route.params.hash
-    );
+    )
   }
 
   updateCounterData(counter: Counter): void {
-    this.counter = counter;
+    this.counter = counter
 
     void this.$store.dispatch('persistent/updateDateCounter', {
       value: this.counter,
       hash: this.$route.params.hash,
       date: new Date(this.$route.params.date)
-    });
+    })
   }
 
   get isLimitedCounter(): boolean {
-    return this.counter.type === CounterType.Limited;
+    return this.counter.type === CounterType.Limited
   }
 
   get isBinaryCounter(): boolean {
-    return this.counter.type === CounterType.Binary;
+    return this.counter.type === CounterType.Binary
   }
 
   get isGoalCounter(): boolean {
-    return this.counter.type === CounterType.Goal;
+    return this.counter.type === CounterType.Goal
   }
 };
 </script>

@@ -26,10 +26,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, PropSync, Emit } from 'vue-property-decorator';
-import AddButton from 'components/helpers/modals/AddButton.vue';
-import Confirm from 'components/helpers/modals/Confirm.vue';
-import { GoalCounter as Type } from 'src/store/persistent/counters-models';
+import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
+import AddButton from 'components/helpers/modals/AddButton.vue'
+import Confirm from 'components/helpers/modals/Confirm.vue'
+import { GoalCounter as Type } from 'src/store/persistent/counters-models'
 
 @Component({
   components: { Confirm, AddButton }
@@ -56,15 +56,15 @@ export default class GoalCounter extends Vue {
       this.counterSync.current -= current
     }
 
-    return this.counterSync;
+    return this.counterSync
   }
 
   @Emit('update:counter')
   back(current: number) {
     if (current > 0) this.completed = false
-    this.counterSync.current += current;
+    this.counterSync.current += current
 
-    return this.counterSync;
+    return this.counterSync
   }
 }
 </script>

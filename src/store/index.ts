@@ -1,23 +1,23 @@
-import { store } from 'quasar/wrappers';
-import Vuex from 'vuex';
-import persistentStore from './persistent';
-import { PersistentStoreInterface } from './persistent/state';
+import { store } from 'quasar/wrappers'
+import Vuex, {Store} from 'vuex'
+import persistentModule from './persistent'
+import { PersistentStoreInterface } from './persistent/state'
 
 export interface StateInterface {
   persistent: PersistentStoreInterface;
 }
 
-export default store(function ({ Vue }) {
-  Vue.use(Vuex);
+export default store(function ({ Vue }): Store<StateInterface> {
+  Vue.use(Vuex)
 
-  return new Vuex.Store<StateInterface>({
+  return new Store<StateInterface>({
     modules: {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      persistent: persistentStore,
+      persistent: persistentModule,
     },
 
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: !!process.env.DEBUGGING
-  });
-});
+  })
+})

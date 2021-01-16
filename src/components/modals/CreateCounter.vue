@@ -60,8 +60,8 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Watch} from 'vue-property-decorator';
-import {Counter, CounterType} from 'src/store/persistent/counters-models';
+import {Component, Vue, Watch} from 'vue-property-decorator'
+import {Counter, CounterType} from 'src/store/persistent/counters-models'
 
 @Component
 export default class CreateCounter extends Vue {
@@ -99,48 +99,48 @@ export default class CreateCounter extends Vue {
   ];
 
   get types() {
-    const data = Object.values(CounterType);
-    const values = data.slice(data.length / 2, data.length);
-    const keys = data.slice(0, data.length / 2);
+    const data = Object.values(CounterType)
+    const values = data.slice(data.length / 2, data.length)
+    const keys = data.slice(0, data.length / 2)
 
     return values.map((value, index) => {
       return {
         label: keys[index],
         value,
-      };
-    });
+      }
+    })
   }
 
   get isLimitedType(): boolean {
-    return this.counter.type == CounterType.Limited;
+    return this.counter.type == CounterType.Limited
   }
 
   get isGoalType(): boolean {
-    return this.counter.type == CounterType.Goal;
+    return this.counter.type == CounterType.Goal
   }
 
   @Watch('type')
   onTypeChanged(typeData: {value: number}) {
-    this.counter.type = typeData.value;
+    this.counter.type = typeData.value
 
     if (this.counter.type === CounterType.Limited) {
-      this.counter.limit = 100;
-      this.counter.current = 0;
+      this.counter.limit = 100
+      this.counter.current = 0
     } else {
-      delete this.counter.limit;
-      delete this.counter.current;
+      delete this.counter.limit
+      delete this.counter.current
     }
 
     if (this.counter.type === CounterType.Goal) {
-      this.counter.current = 100;
+      this.counter.current = 100
     } else {
-      delete this.counter.current;
+      delete this.counter.current
     }
 
     if (this.counter.type === CounterType.Binary) {
-      this.counter.value = false;
+      this.counter.value = false
     } else {
-      delete this.counter.value;
+      delete this.counter.value
     }
   }
 }

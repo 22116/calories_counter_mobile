@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" v-touch-swipe.mouse.right="() => this.leftDrawerOpen = true">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -28,7 +28,6 @@
       show-if-above
       bordered
       content-class="sidebar-content"
-      :dark="$q.dark === true"
     >
       <q-list>
         <q-item-label
@@ -66,10 +65,11 @@
 
 <script lang="ts">
 import EssentialLink from 'components/helpers/EssentialLink.vue'
-import { Component, Vue } from 'vue-property-decorator';
-import { Hash, Profile } from 'src/store/persistent/state';
-import { Counter } from 'src/store/persistent/counters-models';
-import CreateCounter from 'components/modals/CreateCounter.vue';
+import { Component, Vue } from 'vue-property-decorator'
+import { Hash } from 'src/store/persistent/state'
+import { Counter } from 'src/store/persistent/counters-models'
+import CreateCounter from 'components/modals/CreateCounter.vue'
+import {counterCreatedEvent, counterDeletedEvent} from 'src/core/events/counter'
 
 @Component({
   components: { CreateCounter, EssentialLink }
@@ -91,58 +91,36 @@ export default class MainLayout extends Vue {
     },
   ];
   public counterLinks: Array<{ hash: string }> = [];
-  public counters: Record<Hash, Counter>;
+  public counters: Record<Hash, Counter> = {};
   public date = new Date();
-  public timer: number;
+  public timer = 0;
 
-  public constructor() {
-    super();
+  mounted() {
+    this.loadUserCounters()
+    this.timer = window.setInterval(() => this.date = new Date(), 1000)
+  }
 
+  public async counterCreated(counter: Counter) {
+    await counterCreatedEvent(this.$store, counter).then(() => this.loadUserCounters())
+  }
+
+  public async onCounterDelete(hash: Hash) {
+    await counterDeletedEvent(this.$store, hash).then(() => this.loadUserCounters())
+  }
+
+  public loadUserCounters() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    this.counters = this.$store.getters['persistent/userCounters'];
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const profile = Object.assign(this.$store.getters['persistent/profile']) as Profile;
-
-    if (profile.dark !== null) {
-      this.$q.dark.set(profile.dark);
-    }
-
-    this.timer = window.setInterval(() => this.date = new Date(), 1000);
+    this.counters = this.$store.getters['persistent/userCounters']
   }
 
   public get counterLinksSync() {
-    this.counterLinks = [];
+    this.counterLinks = []
 
     for (let hash in this.counters) {
-      this.counterLinks.push(this.createCounterLink(this.counters[hash], hash, this.date));
+      this.counterLinks.push(this.createCounterLink(this.counters[hash], hash, this.date))
     }
 
-    return this.counterLinks;
-  }
-
-  public counterCreated(counter: Counter) {
-    void this.$store.dispatch('persistent/addCounter', counter);
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    this.counters = this.$store.getters['persistent/userCounters'];
-
-    this.$q.notify({
-      type: 'positive',
-      message: 'Counter successfully created'
-    })
-  }
-
-  public onCounterDelete(hash: Hash) {
-    void this.$store.dispatch('persistent/removeCounter', hash);
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    this.counters = this.$store.getters['persistent/userCounters'];
-
-    this.$q.notify({
-      type: 'positive',
-      message: 'Counter successfully deleted'
-    })
+    return this.counterLinks
   }
 
   public createCounterLink(counter: Counter, hash: Hash, date: Date) {
@@ -152,11 +130,11 @@ export default class MainLayout extends Vue {
       icon: counter.icon,
       link: `/counter/${hash}/${date.toDateString()}`,
       hash
-    };
+    }
   }
 
   public beforeDestroy() {
-    clearInterval(this.timer);
+    clearInterval(this.timer)
   }
 }
 </script>
