@@ -2,7 +2,7 @@
 
 import {boot} from 'quasar/wrappers'
 import {StateInterface} from 'src/store'
-import {Dark, Loading} from 'quasar'
+import {Dark, Loading, colors} from 'quasar'
 import {Store} from 'vuex'
 import {Counter} from 'src/store/persistent/counters-models'
 import {clone} from 'src/other/helper'
@@ -50,6 +50,10 @@ function initializeSettings(data: { store: Store<StateInterface> }) {
 
   if (profile.dark !== null) {
     Dark.set(profile.dark)
+  }
+
+  if (profile.theme) {
+    colors.setBrand('primary', profile.theme)
   }
 }
 

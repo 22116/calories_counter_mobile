@@ -1,10 +1,11 @@
 import { Counter } from 'src/store/persistent/counters-models'
 
-export type Hash = string;
-export type History = Record<string, DayData>;
+export type Hash = string
+export type History = Record<string, DayData>
 
 export interface Profile {
   dark: boolean | null,
+  theme: string,
 }
 
 export interface DayData {
@@ -21,6 +22,7 @@ export interface PersistentStoreInterface {
 const state: PersistentStoreInterface = {
   profile: {
     dark: null,
+    theme: '#1976D2'
   },
   counters: {},
   history: {},
