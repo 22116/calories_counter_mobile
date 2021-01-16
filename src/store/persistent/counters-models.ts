@@ -1,6 +1,7 @@
 export enum CounterType {
   Limited,
-  Binary
+  Binary,
+  Goal
 }
 
 export interface Counter {
@@ -17,8 +18,13 @@ export interface BinaryCounter extends Counter {
   value: boolean
 }
 
-export interface LimitedCounter extends Counter {
+export interface  LimitedCounter extends Counter {
   type: CounterType.Limited,
   limit: number,
   current: number
+}
+
+export interface GoalCounter extends Counter {
+  type: CounterType.Goal,
+  current: number,
 }

@@ -2,17 +2,19 @@
   <q-page class="row items-center justify-evenly">
     <limited-counter v-if="isLimitedCounter" :counter="counter" @update:counter="updateCounterData"></limited-counter>
     <binary-counter v-if="isBinaryCounter" :counter="counter" @update:counter="updateCounterData"></binary-counter>
+    <goal-counter v-if="isGoalCounter" :counter="counter" @update:counter="updateCounterData"></goal-counter>
   </q-page>
 </template>
 
 <script lang="ts">
-import LimitedCounter from 'components/counters/LimitedCounter.vue';
 import { Component, Vue } from 'vue-property-decorator';
 import { Counter, CounterType } from 'src/store/persistent/counters-models';
+import LimitedCounter from 'components/counters/LimitedCounter.vue';
 import BinaryCounter from 'components/counters/BinaryCounter.vue';
+import GoalCounter from 'components/counters/GoalCounter.vue';
 
 @Component({
-  components: { BinaryCounter, LimitedCounter }
+  components: {GoalCounter, BinaryCounter, LimitedCounter }
 })
 export default class PageIndex extends Vue {
   public counter!: Counter;
@@ -43,6 +45,10 @@ export default class PageIndex extends Vue {
 
   get isBinaryCounter(): boolean {
     return this.counter.type === CounterType.Binary;
+  }
+
+  get isGoalCounter(): boolean {
+    return this.counter.type === CounterType.Goal;
   }
 };
 </script>

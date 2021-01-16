@@ -26,8 +26,8 @@
       </q-dialog>
     </div>
     <div class="row q-gutter-md q-pa-lg">
-      <q-badge color="red">Binary counter uncheched</q-badge>
-      <q-badge color="green">Binary counter cheched</q-badge>
+      <q-badge color="red">Some of the counters are not passed</q-badge>
+      <q-badge color="green">All counters reached</q-badge>
     </div>
     <div class="row q-gutter-md q-pa-lg text-grey">
       Help: Tap on the day to switch on the counter in the past
@@ -68,8 +68,12 @@ export default class PageHistory extends Vue {
     const day = this.history[new Date(date).toDateString()];
 
     for (let hash in day.counters) {
-      if (day.counters[hash].type === CounterType.Binary && !day.counters[hash].value) {
-        return 'red';
+      const counter = day.counters[hash]
+
+      switch (counter.type) {
+        case CounterType.Binary: if (!counter.value) return 'red'; continue
+        case CounterType.Limited: if ((counter.current as number) > (counter.limit as number)) return 'red'; continue
+        case CounterType.Goal: if (counter.current) return 'red'
       }
     }
 

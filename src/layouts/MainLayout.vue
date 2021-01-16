@@ -126,6 +126,11 @@ export default class MainLayout extends Vue {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     this.counters = this.$store.getters['persistent/userCounters'];
+
+    this.$q.notify({
+      type: 'positive',
+      message: 'Counter successfully created'
+    })
   }
 
   public onCounterDelete(hash: Hash) {
@@ -133,6 +138,11 @@ export default class MainLayout extends Vue {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     this.counters = this.$store.getters['persistent/userCounters'];
+
+    this.$q.notify({
+      type: 'positive',
+      message: 'Counter successfully deleted'
+    })
   }
 
   public createCounterLink(counter: Counter, hash: Hash, date: Date) {

@@ -46,6 +46,10 @@
           <q-input v-model.number="counter.current" min="0" label="Default" />
         </q-card-section>
 
+        <q-card-section v-if="isGoalType" class="q-pt-none">
+          <q-input v-model.number="counter.current" min="0" label="Goal" />
+        </q-card-section>
+
         <q-card-actions align="right" class="text-primary">
           <q-btn flat label="Cancel" v-close-popup />
           <q-btn flat label="Add" @click="$emit('success', counter)" v-close-popup />
@@ -56,8 +60,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
-import { Counter, CounterType } from 'src/store/persistent/counters-models';
+import {Component, Vue, Watch} from 'vue-property-decorator';
+import {Counter, CounterType} from 'src/store/persistent/counters-models';
 
 @Component
 export default class CreateCounter extends Vue {
@@ -111,6 +115,10 @@ export default class CreateCounter extends Vue {
     return this.counter.type == CounterType.Limited;
   }
 
+  get isGoalType(): boolean {
+    return this.counter.type == CounterType.Goal;
+  }
+
   @Watch('type')
   onTypeChanged(typeData: {value: number}) {
     this.counter.type = typeData.value;
@@ -120,6 +128,12 @@ export default class CreateCounter extends Vue {
       this.counter.current = 0;
     } else {
       delete this.counter.limit;
+      delete this.counter.current;
+    }
+
+    if (this.counter.type === CounterType.Goal) {
+      this.counter.current = 100;
+    } else {
       delete this.counter.current;
     }
 

@@ -110,6 +110,7 @@ module.exports = configure(function (ctx) {
       plugins: [
         'LocalStorage',
         'Loading',
+        'Notify'
       ]
     },
 
@@ -194,7 +195,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'calories-counter-android'
+        appId: 'daily-counter'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
