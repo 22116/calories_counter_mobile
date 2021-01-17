@@ -2,7 +2,8 @@ import { Counter, CounterType } from 'src/core/models/counter/index'
 
 export enum BinaryCounterTheme {
   Default,
-  Bear
+  Bear,
+  Colorful,
 }
 
 export interface BinaryCounter extends Counter {

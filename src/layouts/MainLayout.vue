@@ -62,8 +62,8 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
-      <router-view :key="$route.fullPath" />
+    <q-page-container class='overflow-hidden-x items-stretch'>
+      <router-view class='full-width' :key="$route.fullPath" />
     </q-page-container>
 
     <edit-counter
@@ -127,7 +127,7 @@ export default class MainLayout extends Vue {
     await counterUpdatedEvent(this.$store, this.hash, counter)
       .then(() => this.loadUserCounters())
       .then(() => this.counter = null)
-      .then(() => this.$router.push(`/`))
+      .then(() => this.$router.push('/'))
   }
 
   public onCounterLinkHold(hash: Hash) {
@@ -169,6 +169,9 @@ export default class MainLayout extends Vue {
 </script>
 
 <style lang="sass">
+.overflow-hidden-x
+  overflow-x: hidden
+
 .body--dark
   div.sidebar-content
     background: #1e1e1e !important

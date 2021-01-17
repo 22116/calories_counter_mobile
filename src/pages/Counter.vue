@@ -1,5 +1,5 @@
 <template>
-  <q-page class="row items-center justify-evenly">
+  <q-page class="row items-center justify-evenly items-stretch">
     <limited-counter v-if="isLimitedCounter" :counter="counter" @update:counter="updateCounterData"></limited-counter>
     <binary-counter v-if="isBinaryCounter" :counter="counter" @update:counter="updateCounterData"></binary-counter>
     <goal-counter v-if="isGoalCounter" :counter="counter" @update:counter="updateCounterData"></goal-counter>

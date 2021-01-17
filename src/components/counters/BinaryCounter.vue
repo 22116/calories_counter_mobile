@@ -1,7 +1,8 @@
 <template>
-  <div class="q-pa-md">
+  <div class="row full-width">
     <q-toggle v-if='isDefault()' size="150px" v-model="counterSync.value" :color="counterSync.value ? 'green' : 'red'" />
     <bear-toggle v-if='isBear()' v-model='counterSync.value' />
+    <colorful-toggle v-if='isColorful()' v-model='counterSync.value' />
   </div>
 </template>
 
@@ -9,9 +10,10 @@
 import { Component, Emit, PropSync, Vue, Watch } from 'vue-property-decorator'
 import { BinaryCounter as BinaryCounterType, BinaryCounterTheme } from 'src/core/models/counter'
 import BearToggle from 'components/helpers/buttons/BearToggle.vue'
+import ColorfulToggle from 'components/helpers/buttons/ColorfulToggle.vue'
 
 @Component({
-  components: { BearToggle }
+  components: { ColorfulToggle, BearToggle }
 })
 export default class BinaryCounter extends Vue {
   @PropSync('counter', { type: Object, required: true }) public counterSync!: BinaryCounterType;
@@ -28,6 +30,10 @@ export default class BinaryCounter extends Vue {
 
   public isBear(): boolean {
     return this.counterSync.theme === BinaryCounterTheme.Bear
+  }
+
+  public isColorful(): boolean {
+    return this.counterSync.theme === BinaryCounterTheme.Colorful
   }
 }
 </script>
