@@ -40,7 +40,7 @@ const actions: ActionTree<PersistentStoreInterface, StateInterface> = {
 
     context.commit('stopLoading')
   },
-  updateDateCounter(context, data: {date: Date, hash: string, value: Counter}) {
+  updateDateCounter(context, data: {date: Date, hash: string, counter: Counter}) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const store: PersistentStoreInterface = JSON.parse(JSON.stringify(context.state))
 
@@ -48,7 +48,7 @@ const actions: ActionTree<PersistentStoreInterface, StateInterface> = {
       store.history[data.date.toDateString()] = { counters: {} }
     }
 
-    store.history[data.date.toDateString()].counters[data.hash] = clone(data.value)
+    store.history[data.date.toDateString()].counters[data.hash] = clone(data.counter)
 
     context.commit('updateStore', store)
   },

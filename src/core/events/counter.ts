@@ -24,6 +24,7 @@ export async function counterDeletedEvent(store: Store<StateInterface>, hash: Ha
 
 export async function counterUpdatedEvent(store: Store<StateInterface>, hash: Hash, counter: Counter) {
   await store.dispatch('persistent/updateCounter', { counter, hash })
+  await store.dispatch('persistent/updateDateCounter', { counter, hash, date: new Date() })
 
   Notify.create({
     type: 'positive',

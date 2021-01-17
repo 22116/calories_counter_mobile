@@ -127,7 +127,7 @@ export default class MainLayout extends Vue {
     await counterUpdatedEvent(this.$store, this.hash, counter)
       .then(() => this.loadUserCounters())
       .then(() => this.counter = null)
-      .then(() => this.$router.push(`/counter/${this.hash}/${this.date.toDateString()}`))
+      .then(() => this.$router.push(`/`))
   }
 
   public onCounterLinkHold(hash: Hash) {

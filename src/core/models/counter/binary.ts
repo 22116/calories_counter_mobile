@@ -2,9 +2,7 @@ import { Counter, CounterType } from 'src/core/models/counter/index'
 
 export enum BinaryCounterTheme {
   Default,
-  Smile,
-  Vampire,
-  Circle
+  Bear
 }
 
 export interface BinaryCounter extends Counter {

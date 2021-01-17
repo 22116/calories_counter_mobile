@@ -16,7 +16,7 @@ import GoalCounter from 'components/counters/GoalCounter.vue'
 @Component({
   components: {GoalCounter, BinaryCounter, LimitedCounter }
 })
-export default class PageIndex extends Vue {
+export default class PageCounter extends Vue {
   public counter!: Counter;
 
   public constructor() {
@@ -33,7 +33,7 @@ export default class PageIndex extends Vue {
     this.counter = counter
 
     void this.$store.dispatch('persistent/updateDateCounter', {
-      value: this.counter,
+      counter: this.counter,
       hash: this.$route.params.hash,
       date: new Date(this.$route.params.date)
     })

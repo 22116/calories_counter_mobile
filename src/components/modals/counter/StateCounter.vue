@@ -64,6 +64,10 @@
         <q-input v-model.number="counterSync.current" min="0" label="Goal" />
       </q-card-section>
 
+      <q-card-section v-if="isBinaryType" class="q-pt-none">
+        <q-select v-model="theme" :options="binaryThemes" label="Theme" />
+      </q-card-section>
+
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" @click="$emit('cancel')" v-close-popup />
         <q-btn flat label="Add" @click="$emit('success', counterSync)" v-close-popup />
@@ -74,7 +78,7 @@
 
 <script lang="ts">
 import { Component, Prop, PropSync, Vue, Watch } from 'vue-property-decorator'
-import {Counter, CounterType} from 'src/core/models/counter'
+import { BinaryCounterTheme, Counter, CounterType } from 'src/core/models/counter'
 import { setType } from 'src/core/methods/counter'
 import { getCounterTypeDescription } from 'src/core/methods/counter'
 import { formatEnum } from 'src/utility/helper'
@@ -87,7 +91,11 @@ export default class StateCounter extends Vue {
 
   public type = {
     label: 'Binary',
-    value: CounterType.Binary,
+    value: 0,
+  }
+  public theme = {
+    label: 'Default',
+    value: 0,
   }
   public icons = [
     'label',
@@ -109,26 +117,52 @@ export default class StateCounter extends Vue {
     'calculate',
   ]
 
-  public get types() {
-    return formatEnum(CounterType)
-      .map((label, value) => Object.create({ label, value }))
+  mounted() {
+    this.type = {
+      label: formatEnum(CounterType)[this.counterSync.type],
+      value: this.counterSync.type,
+    }
+
+    this.theme = {
+      label: formatEnum(BinaryCounterTheme)[this.counterSync.theme],
+      value: this.counterSync.theme,
+    }
   }
 
-  public get isLimitedType(): boolean {
+  get types() {
+    return formatEnum(CounterType)
+      .map((label, value) => Object.create({ label, value }) as { label: string, value: number })
+  }
+
+  get binaryThemes() {
+    return formatEnum(BinaryCounterTheme)
+      .map((label, value) => Object.create({ label, value }) as { label: string, value: number })
+  }
+
+  get isLimitedType(): boolean {
     return this.counterSync.type === CounterType.Limited
   }
 
-  public get isGoalType(): boolean {
+  get isGoalType(): boolean {
     return this.counterSync.type === CounterType.Goal
   }
 
-  public getDescription(type: CounterType): string {
+  get isBinaryType(): boolean {
+    return this.counterSync.type === CounterType.Binary
+  }
+
+  getDescription(type: CounterType): string {
     return getCounterTypeDescription(type)
   }
 
   @Watch('type')
-  public onTypeChanged(typeData: {value: number}) {
+  onTypeChanged(typeData: {value: CounterType}) {
     setType(this.counterSync, typeData.value)
+  }
+
+  @Watch('theme')
+  onThemeChanged(themeData: {value: number}) {
+    this.counterSync.theme = themeData.value
   }
 }
 </script>

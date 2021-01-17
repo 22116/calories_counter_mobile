@@ -1,6 +1,6 @@
 <template>
   <state-counter
-    title='Edit counter?'
+    title='Edit counter'
     :counter='counter'
     :show='true'
     @success="(value) => $emit('success', value)"

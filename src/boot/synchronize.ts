@@ -46,7 +46,8 @@ async function addMissedDays(data: { store: Store<StateInterface> }) {
       if (!history[date.toDateString()]) {
         await data.store.dispatch('persistent/updateDateCounter', {
           date: new Date(date),
-          counter: clone(counter)
+          counter: clone(counter),
+          hash
         })
       }
 

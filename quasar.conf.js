@@ -25,7 +25,8 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-      'synchronize'
+      ctx.prod.prod === true ? 'sentry' : '',
+      'synchronize',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -71,14 +72,25 @@ module.exports = configure(function (ctx) {
       extendWebpack (cfg) {
           // linting is slow in TS projects, we execute it only for production builds
         if (ctx.prod) {
-        cfg.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /node_modules/
-        })
+          cfg.module.rules.push({
+            enforce: 'pre',
+            test: /\.(js|vue)$/,
+            loader: 'eslint-loader',
+            exclude: /node_modules/
+          })
         }
       },
+
+      env: require('./env.json'),
+      // chainWebpack: (config => {
+      //   config.module
+      //     .rule('Snap')
+      //     .test(require.resolve('snapsvg/dist/snap.svg.js'))
+      //     .use('imports-loader')
+      //     .loader('imports-loader?this=>window,fix=>module.exports=0')
+      //
+      //   config.resolve.alias.set('snapsvg', 'snapsvg/dist/snap.svg.js')
+      // })
     },
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
