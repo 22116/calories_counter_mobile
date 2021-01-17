@@ -1,4 +1,4 @@
-import { Counter, CounterType } from 'src/store/persistent/counters-models'
+import { Counter, CounterType } from 'src/core/models/counter'
 
 export function setType(counter: Counter, type: CounterType) {
   counter.type = type

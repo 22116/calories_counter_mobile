@@ -1,4 +1,4 @@
-import { Counter } from 'src/store/persistent/counters-models'
+import { Counter } from 'src/core/models/counter'
 
 export type Hash = string
 export type History = Record<string, DayData>

@@ -4,8 +4,8 @@ import {boot} from 'quasar/wrappers'
 import {StateInterface} from 'src/store'
 import {Dark, Loading, colors} from 'quasar'
 import {Store} from 'vuex'
-import {Counter} from 'src/store/persistent/counters-models'
-import {clone} from 'src/other/helper'
+import {Counter} from 'src/core/models/counter'
+import {clone} from 'src/utility/helper'
 import {Profile} from 'src/store/persistent/state'
 
 async function backwardCompatibility(data: { store: Store<StateInterface> }) {
@@ -14,6 +14,16 @@ async function backwardCompatibility(data: { store: Store<StateInterface> }) {
   for (const hash in counters) {
     if (!counters[hash].createdAt) {
       counters[hash].createdAt = new Date().toDateString()
+
+      await data.store.dispatch('persistent/updateCounter', {
+        counter: counters[hash],
+        hash
+      })
+    }
+
+    if (counters[hash].theme === undefined) {
+      // 0 always refers to default theme on each counter type
+      counters[hash].theme = 0
 
       await data.store.dispatch('persistent/updateCounter', {
         counter: counters[hash],

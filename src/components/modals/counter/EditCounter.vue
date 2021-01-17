@@ -4,12 +4,13 @@
     :counter='counter'
     :show='true'
     @success="(value) => $emit('success', value)"
+    @cancel="(value) => $emit('cancel', value)"
   />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import {Counter} from 'src/store/persistent/counters-models'
+import {Counter} from 'src/core/models/counter'
 import StateCounter from 'components/modals/counter/StateCounter.vue'
 
 @Component({

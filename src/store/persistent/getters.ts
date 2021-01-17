@@ -3,8 +3,8 @@
 import { GetterTree } from 'vuex'
 import { StateInterface } from '../index'
 import { DayData, Profile, PersistentStoreInterface, Hash } from './state'
-import { Counter } from 'src/store/persistent/counters-models'
-import { clone } from 'src/other/helper'
+import { Counter } from 'src/core/models/counter'
+import { clone } from 'src/utility/helper'
 
 const getters: GetterTree<PersistentStoreInterface, StateInterface> = {
   history(state): Record<string, DayData> {

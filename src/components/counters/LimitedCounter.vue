@@ -26,7 +26,7 @@
 import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
 import AddButton from 'components/helpers/modals/AddButton.vue'
 import Confirm from 'components/helpers/modals/Confirm.vue'
-import { LimitedCounter as LimitedCounterType } from 'src/store/persistent/counters-models'
+import { LimitedCounter as LimitedCounterType } from 'src/core/models/counter'
 
 @Component({
   components: { Confirm, AddButton }

@@ -2,11 +2,11 @@ import { ActionTree } from 'vuex'
 import { StateInterface } from '../index'
 import { Hash, PersistentStoreInterface, Profile } from './state'
 import { LocalStorage } from 'quasar'
-import { CordovaError } from 'src/other/filesystem'
-import Filesystem from 'src/other/filesystem'
-import { Counter } from 'src/store/persistent/counters-models'
-import { IdGenerator } from 'src/other/encryption'
-import { clone } from 'src/other/helper'
+import { CordovaError } from 'src/utility/filesystem'
+import Filesystem from 'src/utility/filesystem'
+import { Counter } from 'src/core/models/counter'
+import { IdGenerator } from 'src/utility/encryption'
+import { clone } from 'src/utility/helper'
 
 const fs = new Filesystem()
 

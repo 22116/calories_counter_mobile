@@ -1,4 +1,4 @@
-import {Counter} from 'src/store/persistent/counters-models'
+import {Counter} from 'src/core/models/counter'
 import {Notify} from 'quasar'
 import {Hash} from 'src/store/persistent/state'
 import {Store} from 'vuex'

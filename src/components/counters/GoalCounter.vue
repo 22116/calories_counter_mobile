@@ -29,7 +29,7 @@
 import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
 import AddButton from 'components/helpers/modals/AddButton.vue'
 import Confirm from 'components/helpers/modals/Confirm.vue'
-import { GoalCounter as Type } from 'src/store/persistent/counters-models'
+import { GoalCounter as Type } from 'src/core/models/counter'
 
 @Component({
   components: { Confirm, AddButton }

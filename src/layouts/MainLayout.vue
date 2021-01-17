@@ -66,7 +66,12 @@
       <router-view :key="$route.fullPath" />
     </q-page-container>
 
-    <edit-counter v-if='counter !== null' :counter='counter' @success='onCounterEdited' />
+    <edit-counter
+      v-if='counter !== null'
+      :counter='counter'
+      @success='onCounterEdited'
+      @cancel='() => counter = null'
+    />
   </q-layout>
 </template>
 
@@ -76,7 +81,7 @@ import CreateCounter from 'components/modals/counter/CreateCounter.vue'
 import EditCounter from 'components/modals/counter/EditCounter.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { Hash } from 'src/store/persistent/state'
-import { Counter } from 'src/store/persistent/counters-models'
+import { Counter } from 'src/core/models/counter'
 import { counterCreatedEvent, counterDeletedEvent, counterUpdatedEvent } from 'src/core/events/counter'
 
 @Component({
@@ -101,7 +106,7 @@ export default class MainLayout extends Vue {
   public counterLinks: Array<{ hash: string }> = []
   public counters: Record<Hash, Counter> = {}
   public counter: Counter|null = null
-  public hash: string = ''
+  public hash = ''
   public date = new Date()
   public timer = 0
 
@@ -125,8 +130,10 @@ export default class MainLayout extends Vue {
       .then(() => this.$router.push(`/counter/${this.hash}/${this.date.toDateString()}`))
   }
 
-  public async onCounterLinkHold(hash: Hash) {
+  public onCounterLinkHold(hash: Hash) {
     this.hash = hash
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
     this.counter = this.$store.getters['persistent/counterByHash'](this.date, hash)
   }
 

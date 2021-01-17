@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator'
-import {Counter, CounterType} from 'src/store/persistent/counters-models'
+import { BinaryCounterTheme, Counter, CounterType } from 'src/core/models/counter'
 import StateCounter from 'components/modals/counter/StateCounter.vue'
 
 @Component({
@@ -24,6 +24,7 @@ export default class CreateCounter extends Vue {
     name: '',
     description: '',
     type: CounterType.Binary,
+    theme: BinaryCounterTheme.Default,
     icon: 'label',
     value: false,
     createdAt: new Date().toDateString()

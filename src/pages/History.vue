@@ -37,9 +37,9 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from 'vue-property-decorator'
-import { dateFormat } from 'src/other/helper'
+import { dateFormat } from 'src/utility/helper'
 import { History } from 'src/store/persistent/state'
-import { CounterType } from 'src/store/persistent/counters-models'
+import { CounterType } from 'src/core/models/counter'
 
 type Option = {label: string, value: string};
 

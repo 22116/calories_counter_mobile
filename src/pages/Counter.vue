@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { Counter, CounterType } from 'src/store/persistent/counters-models'
+import { Counter, CounterType } from 'src/core/models/counter'
 import LimitedCounter from 'components/counters/LimitedCounter.vue'
 import BinaryCounter from 'components/counters/BinaryCounter.vue'
 import GoalCounter from 'components/counters/GoalCounter.vue'

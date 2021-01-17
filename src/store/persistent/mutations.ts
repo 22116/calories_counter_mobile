@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 import { PersistentStoreInterface } from './state'
 import { LocalStorage } from 'quasar'
-import Filesystem from 'src/other/filesystem'
+import Filesystem from 'src/utility/filesystem'
 
 const fs = new Filesystem()
 

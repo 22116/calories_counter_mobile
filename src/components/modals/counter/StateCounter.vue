@@ -50,7 +50,7 @@
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup />
+        <q-btn flat label="Cancel" @click="$emit('cancel')" v-close-popup />
         <q-btn flat label="Add" @click="$emit('success', counterSync)" v-close-popup />
       </q-card-actions>
     </q-card>
@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { Component, Prop, PropSync, Vue, Watch } from 'vue-property-decorator'
-import {Counter, CounterType} from 'src/store/persistent/counters-models'
+import {Counter, CounterType} from 'src/core/models/counter'
 import { setType } from 'src/core/methods/counter'
 
 @Component
