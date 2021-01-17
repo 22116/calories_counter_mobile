@@ -21,3 +21,12 @@ export async function counterDeletedEvent(store: Store<StateInterface>, hash: Ha
     message: 'Counter successfully deleted'
   })
 }
+
+export async function counterUpdatedEvent(store: Store<StateInterface>, hash: Hash, counter: Counter) {
+  await store.dispatch('persistent/updateCounter', { counter, hash })
+
+  Notify.create({
+    type: 'positive',
+    message: 'Counter successfully updated'
+  })
+}

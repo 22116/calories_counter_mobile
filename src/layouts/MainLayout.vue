@@ -37,8 +37,8 @@
           Navigation menu
         </q-item-label>
         <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
-        <q-slide-item v-for="link in counterLinksSync" :key="link.title" left-color="red" @left="onCounterDelete(link.hash)">
-          <EssentialLink v-bind="link" />
+        <q-slide-item v-for="link in counterLinksSync" :key="link.title" left-color="red" @left="() => onCounterDeleted(link.hash)">
+          <EssentialLink class='counter-link' v-touch-hold:600.mouse="() => onCounterLinkHold(link.hash)" v-bind="link" />
           <template v-slot:left>
             Delete
             <q-icon name="delete" />
@@ -49,9 +49,14 @@
             <create-counter @success="counterCreated" />
           </q-item-section>
         </q-item>
-        <q-item>
+        <q-item class='tip'>
           <q-item-section class="text-center text-grey">
             Swipe right to delete
+          </q-item-section>
+        </q-item>
+        <q-item class='tip'>
+          <q-item-section class="text-center text-grey">
+            Hold to edit
           </q-item-section>
         </q-item>
       </q-list>
@@ -60,22 +65,25 @@
     <q-page-container>
       <router-view :key="$route.fullPath" />
     </q-page-container>
+
+    <edit-counter v-if='counter !== null' :counter='counter' @success='onCounterEdited' />
   </q-layout>
 </template>
 
 <script lang="ts">
 import EssentialLink from 'components/helpers/EssentialLink.vue'
+import CreateCounter from 'components/modals/counter/CreateCounter.vue'
+import EditCounter from 'components/modals/counter/EditCounter.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { Hash } from 'src/store/persistent/state'
 import { Counter } from 'src/store/persistent/counters-models'
-import CreateCounter from 'components/modals/CreateCounter.vue'
-import {counterCreatedEvent, counterDeletedEvent} from 'src/core/events/counter'
+import { counterCreatedEvent, counterDeletedEvent, counterUpdatedEvent } from 'src/core/events/counter'
 
 @Component({
-  components: { CreateCounter, EssentialLink }
+  components: { EditCounter, CreateCounter, EssentialLink }
 })
 export default class MainLayout extends Vue {
-  public leftDrawerOpen = false;
+  public leftDrawerOpen = false
   public essentialLinks = [
     {
       title: 'History',
@@ -89,11 +97,13 @@ export default class MainLayout extends Vue {
       icon: 'settings',
       link: '/settings'
     },
-  ];
-  public counterLinks: Array<{ hash: string }> = [];
-  public counters: Record<Hash, Counter> = {};
-  public date = new Date();
-  public timer = 0;
+  ]
+  public counterLinks: Array<{ hash: string }> = []
+  public counters: Record<Hash, Counter> = {}
+  public counter: Counter|null = null
+  public hash: string = ''
+  public date = new Date()
+  public timer = 0
 
   mounted() {
     this.loadUserCounters()
@@ -104,8 +114,20 @@ export default class MainLayout extends Vue {
     await counterCreatedEvent(this.$store, counter).then(() => this.loadUserCounters())
   }
 
-  public async onCounterDelete(hash: Hash) {
+  public async onCounterDeleted(hash: Hash) {
     await counterDeletedEvent(this.$store, hash).then(() => this.loadUserCounters())
+  }
+
+  public async onCounterEdited(counter: Counter) {
+    await counterUpdatedEvent(this.$store, this.hash, counter)
+      .then(() => this.loadUserCounters())
+      .then(() => this.counter = null)
+      .then(() => this.$router.push(`/counter/${this.hash}/${this.date.toDateString()}`))
+  }
+
+  public async onCounterLinkHold(hash: Hash) {
+    this.hash = hash
+    this.counter = this.$store.getters['persistent/counterByHash'](this.date, hash)
   }
 
   public loadUserCounters() {
@@ -143,4 +165,7 @@ export default class MainLayout extends Vue {
 .body--dark
   div.sidebar-content
     background: #1e1e1e !important
+
+.tip
+  min-height: auto
 </style>

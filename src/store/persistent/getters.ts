@@ -16,8 +16,11 @@ const getters: GetterTree<PersistentStoreInterface, StateInterface> = {
   userCounters(state): Record<Hash, Counter> {
     return clone(state.counters)
   },
+  userCounterByHash: (state, getters) => (hash: Hash): Counter|null => {
+    return clone(getters.userCounters[hash] || null)
+  },
   counterByHash: (state, getters) => (date: Date, hash: Hash): Counter|null => {
-    return clone(getters.day(date).counters[hash] || getters.userCounters[hash] || null)
+    return clone(getters.day(date).counters[hash] || getters.userCounterByHash(hash))
   },
   day: (state) => (date: Date) => {
     return clone(state.history[date.toDateString()] || { counters: {} })
