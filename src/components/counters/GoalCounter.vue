@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='content-center justify-center row'>
     <q-circular-progress
       show-value
       font-size="32px"
@@ -8,8 +8,8 @@
       size="300px"
       :thickness="0.22"
       :color="completed ? 'green' : 'orange'"
-      track-color="grey-3"
-      class="row justify-center q-ma-md"
+      track-color="orange"
+      class="col-auto justify-center"
     >
       <span v-if="!completed">
         {{ counterSync.current }} left
@@ -18,9 +18,19 @@
         Passed!
       </span>
     </q-circular-progress>
-    <div class="row q-mt-xl">
-      <add-button class="col flex justify-center" :label="'Back'" @success="back" />
-      <add-button v-if="!completed" class="col flex justify-center" :label="'Forward'" @success="forward" />
+    <div class="col-12 q-mt-xl">
+      <div class='row'>
+        <add-button class="col flex" :class='{"justify-end": !completed, "justify-center": completed }' label="Back" @success="back" />
+        <add-button v-if="!completed" class="col flex justify-start q-mx-md" label="Forward" @success="forward" />
+        <div v-if="!completed" class='col-12 row q-mt-md justify-center'>
+          <q-btn class='col-auto q-ma-sm' label="+1" size="xl" color="primary" @click="forward(1)" />
+          <q-btn class='col-auto q-ma-sm' label="+5" size="xl" color="primary" @click="forward(5)" />
+          <q-btn class='col-auto q-ma-sm' label="+10" size="xl" color="primary" @click="forward(10)" />
+          <q-btn class='col-auto q-ma-sm' label="+25" size="xl" color="primary" @click="forward(25)" />
+          <q-btn class='col-auto q-ma-sm' label="+50" size="xl" color="primary" @click="forward(50)" />
+          <q-btn class='col-auto q-ma-sm' label="+100" size="xl" color="primary" @click="forward(100)" />
+        </div>
+      </div>
     </div>
   </div>
 </template>

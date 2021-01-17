@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='content-center justify-center row'>
     <q-circular-progress
       show-value
       font-size="32px"
@@ -9,15 +9,25 @@
       :thickness="0.22"
       color="teal"
       track-color="grey-3"
-      class="row justify-center q-ma-md"
+      class="col-auto justify-center"
     >
       <span :class="{'text-red': counterSync.current > counterSync.limit}">
         {{ counterSync.current }}/{{ counterSync.limit }}
       </span>
     </q-circular-progress>
-    <div class="row q-mt-xl">
-      <add-button class="col flex justify-center" :label="'Add'" @success="add" />
-      <confirm class="col flex justify-center" :label="'Reset'" :question="'Are you sure you want to reset?'" @success="reset" />
+    <div class="col-12 q-mt-xl">
+      <div class='row'>
+        <add-button class="col flex justify-end" :label="'Add'" @success="add" />
+        <confirm class="col flex justify-start q-mx-md" :label="'Reset'" :question="'Are you sure you want to reset?'" @success="reset" />
+        <div class='col-12 row q-mt-md justify-center'>
+          <q-btn class='col-auto q-ma-sm' label="+1" size="xl" color="primary" @click="add(1)" />
+          <q-btn class='col-auto q-ma-sm' label="+5" size="xl" color="primary" @click="add(5)" />
+          <q-btn class='col-auto q-ma-sm' label="+10" size="xl" color="primary" @click="add(10)" />
+          <q-btn class='col-auto q-ma-sm' label="+25" size="xl" color="primary" @click="add(25)" />
+          <q-btn class='col-auto q-ma-sm' label="+50" size="xl" color="primary" @click="add(50)" />
+          <q-btn class='col-auto q-ma-sm' label="+100" size="xl" color="primary" @click="add(100)" />
+        </div>
+      </div>
     </div>
   </div>
 </template>

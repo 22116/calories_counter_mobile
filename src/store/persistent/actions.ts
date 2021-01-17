@@ -41,8 +41,7 @@ const actions: ActionTree<PersistentStoreInterface, StateInterface> = {
     context.commit('stopLoading')
   },
   updateDateCounter(context, data: {date: Date, hash: string, counter: Counter}) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const store: PersistentStoreInterface = JSON.parse(JSON.stringify(context.state))
+    const store: PersistentStoreInterface = clone(context.state)
 
     if (!store.history.hasOwnProperty(data.date.toDateString())) {
       store.history[data.date.toDateString()] = { counters: {} }
@@ -53,16 +52,14 @@ const actions: ActionTree<PersistentStoreInterface, StateInterface> = {
     context.commit('updateStore', store)
   },
   updateCounter(context, data: {counter: Counter, hash: Hash}) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const store: PersistentStoreInterface = JSON.parse(JSON.stringify(context.state))
+    const store: PersistentStoreInterface = clone(context.state)
 
     store.counters[data.hash] = clone(data.counter)
 
     context.commit('updateStore', store)
   },
   addCounter(context, counter: Counter) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const store: PersistentStoreInterface = JSON.parse(JSON.stringify(context.state))
+    const store: PersistentStoreInterface = clone(context.state)
     const generator = new IdGenerator()
 
     store.counters[generator.generate()] = clone(counter)
@@ -70,16 +67,14 @@ const actions: ActionTree<PersistentStoreInterface, StateInterface> = {
     context.commit('updateStore', store)
   },
   removeCounter(context, hash: Hash) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const store: PersistentStoreInterface = JSON.parse(JSON.stringify(context.state))
+    const store: PersistentStoreInterface = clone(context.state)
 
     delete store.counters[hash]
 
     context.commit('updateStore', store)
   },
   updateProfile(context, profile: Profile) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const store: PersistentStoreInterface = JSON.parse(JSON.stringify(context.state))
+    const store: PersistentStoreInterface = clone(context.state)
 
     store.profile = clone(profile)
 

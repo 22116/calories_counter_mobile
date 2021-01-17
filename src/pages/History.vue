@@ -14,8 +14,27 @@
             <div class="text-h6">Pick counter to switch</div>
           </q-card-section>
 
-          <q-card-section>
-            <q-select v-model="counterOption" :options="counterOptions" />
+          <q-card-section class="q-pt-none">
+            <q-select v-model="counterOption" :options="counterOptions" label="Type">
+              <template v-slot:option="scope">
+                <q-item
+                  v-bind="scope.itemProps"
+                  v-on="scope.itemEvents"
+                >
+                  <q-item-section v-if="scope.opt.icon" avatar>
+                    <q-icon :name="scope.opt.icon" />
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label v-html="scope.opt.label" />
+                    <q-item-label
+                      v-text='scope.opt.description'
+                      caption
+                    />
+                  </q-item-section>
+                </q-item>
+              </template>
+            </q-select>
           </q-card-section>
 
           <q-card-actions align="right" class="text-primary">
@@ -30,7 +49,8 @@
       <q-badge color="green">All counters reached</q-badge>
     </div>
     <div class="row q-gutter-md q-pa-lg text-grey">
-      Help: Tap on the day to switch on the counter in the past
+      Help: Tap on the day to switch on the counter in the past. You can
+      switch to the date where you already have registered counter.
     </div>
   </q-page>
 </template>
@@ -41,7 +61,7 @@ import { dateFormat } from 'src/utility/helper'
 import { History } from 'src/store/persistent/state'
 import { CounterType } from 'src/core/models/counter'
 
-type Option = {label: string, value: string};
+type Option = {label: string, value: string, description: string, icon: string|null};
 
 @Component({
   filters: { dateFormat }
@@ -92,6 +112,8 @@ export default class PageHistory extends Vue {
         this.counterOptions.push({
           value: hash,
           label: counters[hash].name,
+          description: counters[hash].description,
+          icon: counters[hash].icon,
         })
       }
 
@@ -99,9 +121,9 @@ export default class PageHistory extends Vue {
     }
   }
 
-  public switchCounter() {
+  public async switchCounter() {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    void this.$router.push(`/counter/${this.counterOption?.value}/${new Date(this.date).toDateString()}`)
+    await this.$router.push(`/counter/${this.counterOption?.value}/${new Date(this.date).toDateString()}`)
   }
 };
 </script>

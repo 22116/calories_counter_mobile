@@ -1,5 +1,5 @@
 <template>
-  <div class="row full-width">
+  <div class="row full-width justify-center">
     <q-toggle v-if='isDefault()' size="150px" v-model="counterSync.value" :color="counterSync.value ? 'green' : 'red'" />
     <bear-toggle v-if='isBear()' v-model='counterSync.value' />
     <colorful-toggle v-if='isColorful()' v-model='counterSync.value' />
@@ -25,7 +25,7 @@ export default class BinaryCounter extends Vue {
   }
 
   public isDefault(): boolean {
-    return this.counterSync.theme === BinaryCounterTheme.Default
+    return this.counterSync.theme === undefined || this.counterSync.theme === BinaryCounterTheme.Default
   }
 
   public isBear(): boolean {

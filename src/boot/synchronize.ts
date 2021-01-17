@@ -5,8 +5,7 @@ import {StateInterface} from 'src/store'
 import {Dark, Loading, colors} from 'quasar'
 import {Store} from 'vuex'
 import {Counter} from 'src/core/models/counter'
-import {clone} from 'src/utility/helper'
-import {Profile} from 'src/store/persistent/state'
+import { DayData, Profile } from 'src/store/persistent/state'
 
 async function backwardCompatibility(data: { store: Store<StateInterface> }) {
   const counters = data.store.getters['persistent/userCounters']
@@ -43,10 +42,12 @@ async function addMissedDays(data: { store: Store<StateInterface> }) {
     const date = new Date(counter.createdAt)
 
     while (date.toDateString() !== today.toDateString()) {
-      if (!history[date.toDateString()]) {
+      const day: DayData|undefined = history[date.toDateString()]
+
+      if (!day || (day && !day.counters[hash])) {
         await data.store.dispatch('persistent/updateDateCounter', {
           date: new Date(date),
-          counter: clone(counter),
+          counter,
           hash
         })
       }
