@@ -22,3 +22,19 @@ export function dateFormat(x: Date, y: string): string {
     return x.getFullYear().toString().slice(-v.length)
   })
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function formatEnum(e: Object): Array<string> {
+  const data = Object.values(e)
+  const values = data.slice(data.length / 2, data.length)
+  const keys = data.slice(0, data.length / 2)
+
+  const object: Array<string> = []
+
+  values.forEach((value, index) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
+    object[values[index]] = keys[index]
+  })
+
+  return object
+}

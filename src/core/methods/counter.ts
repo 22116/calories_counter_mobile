@@ -23,3 +23,16 @@ export function setType(counter: Counter, type: CounterType) {
     delete counter.value
   }
 }
+
+export function getCounterTypeDescription(type: CounterType) {
+  switch (type) {
+    case CounterType.Binary:
+      return 'Just a button. Yes/No'
+    case CounterType.Limited:
+      return 'Make a restriction which you cannot break'
+    case CounterType.Goal:
+      return 'Count how many steps left to pass your goal'
+  }
+
+  return ''
+}
