@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { Component, VModel, Watch } from 'vue-property-decorator'
+import { Component, Emit, VModel, Watch } from 'vue-property-decorator'
 import { BinaryCounterTheme, Counter, CounterType } from 'src/core/models/counter'
 import { setType } from 'src/core/methods/counter'
 import { getCounterTypeDescription } from 'src/core/methods/counter'
@@ -93,6 +93,7 @@ export default class Type extends CounterTypeMixin {
     return getCounterTypeDescription(type)
   }
 
+  @Emit('input')
   @Watch('additionalProperties', {deep: true})
   additionalPropertiesChanged(props: AdditionalProperties) {
     if (this.isLimitedCounter(this.counter)) {
@@ -104,6 +105,8 @@ export default class Type extends CounterTypeMixin {
       this.counter.start = props.current
       this.counter.current = props.current
     }
+
+    return this.counter
   }
 
   @Watch('type')

@@ -1,13 +1,7 @@
 <template>
   <q-dialog v-model="prompt" persistent>
-    <q-card class='overflow-hidden-x' style="min-width: 400px">
-      <q-carousel v-model='sliderIndex'
-                  animated
-                  swipeable
-                  height='auto'
-                  transition-prev="slide-right"
-                  transition-next="slide-left"
-      >
+    <q-card class='overflow-hidden-x' style="min-width: 300px">
+      <q-carousel v-model='sliderIndex' animated swipeable height='auto' transition-prev="slide-right" transition-next="slide-left">
         <q-carousel-slide :name="0">
           <q-card-section>
             <div class="text-h6">{{ title }}</div>
@@ -18,14 +12,20 @@
           <q-card-section>
             <div class="text-h6">Choose counter style</div>
           </q-card-section>
-          <type v-model='counter' />
+          <type v-model='counter' @input='onCounterChanged' />
         </q-carousel-slide>
         <q-carousel-slide :name="2">
           <q-card-section class='overflow-hidden-x'>
             <q-card-section>
               <div class="text-h6">Counter preview</div>
             </q-card-section>
-            <counter-view v-model='counterPreview' @input='() => {}' tag='div' style='min-height: 400px' />
+            <counter-view
+              :key='counterPreviewKey'
+              v-model='counterPreview'
+              @input='counterPreviewKey++'
+              tag='div'
+              style='min-height: 400px'
+            />
           </q-card-section>
         </q-carousel-slide>
       </q-carousel>
@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, PropSync, VModel, Vue } from 'vue-property-decorator'
+import { Component, Prop, PropSync, VModel, Vue, Watch } from 'vue-property-decorator'
 import Generic from 'components/modals/counter/decorators/Generic.vue'
 import Type from 'components/modals/counter/decorators/Type.vue'
 import { Counter } from 'src/core/models/counter'
@@ -55,13 +55,13 @@ export default class StateCounter extends Vue {
   @PropSync('show', {type: Boolean, default: false}) public prompt!: boolean
 
   public sliderIndex = 0
+  public counterPreview = {}
+  public counterPreviewKey = 0
 
-  get counterPreview() {
-    return clone(this.counter)
-  }
-
-  set counterPreview(_value: Counter) {
-    // No actions required
+  @Watch('counter', {deep: true, immediate: true})
+  onCounterChanged(counter: Counter) {
+    this.counterPreview = clone(counter)
+    this.counterPreviewKey++
   }
 
   onButtonClicked() {

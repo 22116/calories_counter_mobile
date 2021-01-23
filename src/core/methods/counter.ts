@@ -3,26 +3,28 @@ import { Counter, CounterType } from 'src/core/models/counter'
 export function setType(counter: Counter, type: CounterType) {
   counter.type = type
 
-  if (counter.type === CounterType.Limited) {
-    counter.limit = 100
-    counter.current = 0
-  } else {
-    delete counter.limit
-    delete counter.current
-  }
+  switch (counter.type) {
+    case CounterType.Binary:
+      counter.value = false
+      delete counter.limit
+      delete counter.current
+      delete counter.start
 
-  if (counter.type === CounterType.Goal) {
-    counter.current = 100
-    counter.start = 100
-  } else {
-    delete counter.current
-    delete counter.start
-  }
+      break
+    case CounterType.Limited:
+      counter.limit = 100
+      counter.current = 0
+      delete counter.value
+      delete counter.start
 
-  if (counter.type === CounterType.Binary) {
-    counter.value = false
-  } else {
-    delete counter.value
+      break
+    case CounterType.Goal:
+      counter.current = 100
+      counter.start = 100
+      delete counter.limit
+      delete counter.value
+
+      break
   }
 }
 
