@@ -13,18 +13,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, ModelSync, Ref, Watch } from 'vue-property-decorator'
+import { Vue, Component, Ref, Watch, VModel } from 'vue-property-decorator'
 
 @Component
 export default class ColorfulToggle extends Vue {
-  @ModelSync('value', 'input', { type: Boolean })
-  public checked!: string;
-
-  @Ref('toggle')
-  public readonly toggle!: HTMLInputElement
-
-  @Ref('bg')
-  public readonly bg!: HTMLDivElement
+  @VModel({ type: Boolean }) public checked!: string;
+  @Ref('toggle') public readonly toggle!: HTMLInputElement
+  @Ref('bg') public readonly bg!: HTMLDivElement
 
   mounted() {
     if (this.checked && !this.bg.classList.contains('on')) {

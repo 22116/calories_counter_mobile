@@ -36,8 +36,14 @@
         >
           Navigation menu
         </q-item-label>
-        <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
-        <q-slide-item v-for="link in counterLinksSync" :key="link.title" left-color="red" @left="() => onCounterDeleted(link.hash)">
+        <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link" />
+        <confirm-slider-left
+          question='Are you sure you want to delete this counter?'
+          v-for="link in counterLinksSync"
+          :key="link.title"
+          left-color="red"
+          @success='() => onCounterDeleted(link.hash)'
+        >
           <essential-link
             v-touch-hold:600.mouse="() => onCounterLinkHold(link.hash)"
             v-bind="link"
@@ -46,7 +52,7 @@
             Delete
             <q-icon name="delete" />
           </template>
-        </q-slide-item>
+        </confirm-slider-left>
         <q-item>
           <q-item-section>
             <create-counter @success="counterCreated" />
@@ -87,32 +93,15 @@ import { Hash } from 'src/store/persistent/state'
 import { Counter } from 'src/core/models/counter'
 import { counterCreatedEvent, counterDeletedEvent, counterUpdatedEvent } from 'src/core/events/counter'
 import { isSucceed } from 'src/core/methods/counter'
+import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
+import links from './links'
 
 @Component({
-  components: { EditCounter, CreateCounter, EssentialLink }
+  components: { ConfirmSliderLeft, EditCounter, CreateCounter, EssentialLink }
 })
 export default class MainLayout extends Vue {
   public leftDrawerOpen = false
-  public essentialLinks = [
-    {
-      title: 'History',
-      caption: 'Check by day',
-      icon: 'calendar_today',
-      link: '/history'
-    },
-    {
-      title: 'Settings',
-      caption: 'Change application preferences',
-      icon: 'settings',
-      link: '/settings'
-    },
-    // {
-    //   title: 'Statistics',
-    //   caption: 'Explore your results',
-    //   icon: 'analytics',
-    //   link: '/statistics'
-    // },
-  ]
+  public essentialLinks = links
   public counterLinks: Array<{ hash: string }> = []
   public counters: Record<Hash, Counter> = {}
   public counter: Counter|null = null
@@ -137,7 +126,7 @@ export default class MainLayout extends Vue {
     await counterUpdatedEvent(this.$store, this.hash, counter)
       .then(() => this.loadUserCounters())
       .then(() => this.counter = null)
-      .then(() => this.$router.push('/'))
+      .then(() => this.$router.push('/').catch(() => console.log('Already on /history')))
   }
 
   public onCounterLinkHold(hash: Hash) {
@@ -187,9 +176,6 @@ export default class MainLayout extends Vue {
 </script>
 
 <style lang="sass">
-.overflow-hidden-x
-  overflow-x: hidden
-
 .body--dark
   div.sidebar-content
     background: #1e1e1e !important

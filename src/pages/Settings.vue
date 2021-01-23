@@ -13,7 +13,7 @@
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { Profile } from 'src/store/persistent/state'
 import { colors } from 'quasar'
-import Color from 'components/helpers/modals/Color.vue'
+import Color from 'components/helpers/buttons/Color.vue'
 @Component({
   components: { Color }
 })

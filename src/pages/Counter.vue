@@ -1,21 +1,18 @@
 <template>
-  <q-page class="row items-center justify-evenly items-stretch">
-    <limited-counter v-if="isLimitedCounter(counter)" :counter="counter" @update:counter="updateCounterData"></limited-counter>
-    <binary-counter v-if="isBinaryCounter(counter)" :counter="counter" @update:counter="updateCounterData"></binary-counter>
-    <goal-counter v-if="isGoalCounter(counter)" :counter="counter" @update:counter="updateCounterData"></goal-counter>
-  </q-page>
+  <counter-view v-model='counter' />
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { Counter } from 'src/core/models/counter'
 import LimitedCounter from 'components/counters/LimitedCounter.vue'
 import BinaryCounter from 'components/counters/BinaryCounter.vue'
 import GoalCounter from 'components/counters/GoalCounter.vue'
 import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
+import CounterView from 'components/CounterView.vue'
 
 @Component({
-  components: {GoalCounter, BinaryCounter, LimitedCounter }
+  components: { CounterView, GoalCounter, BinaryCounter, LimitedCounter }
 })
 export default class PageCounter extends CounterTypeMixin {
   public counter!: Counter;
@@ -30,9 +27,8 @@ export default class PageCounter extends CounterTypeMixin {
     )
   }
 
-  updateCounterData(counter: Counter): void {
-    this.counter = counter
-
+  @Watch('counter', {deep: true})
+  updateCounterData(): void {
     void this.$store.dispatch('persistent/updateDateCounter', {
       counter: this.counter,
       hash: this.$route.params.hash,

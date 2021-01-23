@@ -12,12 +12,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, ModelSync } from 'vue-property-decorator'
+import { Vue, Component, VModel } from 'vue-property-decorator'
 
 @Component
 export default class BearToggle extends Vue {
-  @ModelSync('value', 'input', { type: Boolean })
-  public readonly checked!: string;
+  @VModel({ type: Boolean }) public checked!: string;
 }
 </script>
 
