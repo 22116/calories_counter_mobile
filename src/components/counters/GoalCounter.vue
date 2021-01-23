@@ -3,12 +3,12 @@
     <q-circular-progress
       show-value
       font-size="32px"
-      :value="0"
-      :max="counterSync.current"
+      :value="counterSync.current"
+      :max="counterSync.start"
       size="300px"
       :thickness="0.22"
-      :color="completed ? 'green' : 'orange'"
-      track-color="orange"
+      color="grey-3"
+      :track-color="completed ? 'green' : 'orange'"
       class="col-auto justify-center"
     >
       <span v-if="!completed">

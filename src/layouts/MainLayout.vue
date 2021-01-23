@@ -36,9 +36,12 @@
         >
           Navigation menu
         </q-item-label>
-        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
+        <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link"/>
         <q-slide-item v-for="link in counterLinksSync" :key="link.title" left-color="red" @left="() => onCounterDeleted(link.hash)">
-          <EssentialLink class='counter-link' v-touch-hold:600.mouse="() => onCounterLinkHold(link.hash)" v-bind="link" />
+          <essential-link
+            v-touch-hold:600.mouse="() => onCounterLinkHold(link.hash)"
+            v-bind="link"
+          />
           <template v-slot:left>
             Delete
             <q-icon name="delete" />
@@ -83,6 +86,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { Hash } from 'src/store/persistent/state'
 import { Counter } from 'src/core/models/counter'
 import { counterCreatedEvent, counterDeletedEvent, counterUpdatedEvent } from 'src/core/events/counter'
+import { isSucceed } from 'src/core/methods/counter'
 
 @Component({
   components: { EditCounter, CreateCounter, EssentialLink }
@@ -102,6 +106,12 @@ export default class MainLayout extends Vue {
       icon: 'settings',
       link: '/settings'
     },
+    // {
+    //   title: 'Statistics',
+    //   caption: 'Explore your results',
+    //   icon: 'analytics',
+    //   link: '/statistics'
+    // },
   ]
   public counterLinks: Array<{ hash: string }> = []
   public counters: Record<Hash, Counter> = {}
@@ -153,11 +163,19 @@ export default class MainLayout extends Vue {
   }
 
   public createCounterLink(counter: Counter, hash: Hash, date: Date) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+    counter = this.$store.getters['persistent/counterByHash'](date, hash) || this.counters[hash]
+    const succeed = isSucceed(counter)
+
     return {
       title: counter.name,
       caption: counter.description,
       icon: counter.icon,
       link: `/counter/${hash}/${date.toDateString()}`,
+      class: {
+        'bg-green-transparent': succeed,
+        'bg-red-transparent': !succeed,
+      },
       hash
     }
   }

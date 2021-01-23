@@ -1,22 +1,23 @@
 <template>
   <q-page class="row items-center justify-evenly items-stretch">
-    <limited-counter v-if="isLimitedCounter" :counter="counter" @update:counter="updateCounterData"></limited-counter>
-    <binary-counter v-if="isBinaryCounter" :counter="counter" @update:counter="updateCounterData"></binary-counter>
-    <goal-counter v-if="isGoalCounter" :counter="counter" @update:counter="updateCounterData"></goal-counter>
+    <limited-counter v-if="isLimitedCounter(counter)" :counter="counter" @update:counter="updateCounterData"></limited-counter>
+    <binary-counter v-if="isBinaryCounter(counter)" :counter="counter" @update:counter="updateCounterData"></binary-counter>
+    <goal-counter v-if="isGoalCounter(counter)" :counter="counter" @update:counter="updateCounterData"></goal-counter>
   </q-page>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { Counter, CounterType } from 'src/core/models/counter'
+import { Component } from 'vue-property-decorator'
+import { Counter } from 'src/core/models/counter'
 import LimitedCounter from 'components/counters/LimitedCounter.vue'
 import BinaryCounter from 'components/counters/BinaryCounter.vue'
 import GoalCounter from 'components/counters/GoalCounter.vue'
+import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
 
 @Component({
   components: {GoalCounter, BinaryCounter, LimitedCounter }
 })
-export default class PageCounter extends Vue {
+export default class PageCounter extends CounterTypeMixin {
   public counter!: Counter;
 
   public constructor() {
@@ -37,18 +38,6 @@ export default class PageCounter extends Vue {
       hash: this.$route.params.hash,
       date: new Date(this.$route.params.date)
     })
-  }
-
-  get isLimitedCounter(): boolean {
-    return this.counter.type === CounterType.Limited
-  }
-
-  get isBinaryCounter(): boolean {
-    return this.counter.type === CounterType.Binary
-  }
-
-  get isGoalCounter(): boolean {
-    return this.counter.type === CounterType.Goal
   }
 };
 </script>

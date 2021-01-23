@@ -1,7 +1,7 @@
 <template>
   <state-counter
     title='Edit counter'
-    :counter='counter'
+    v-model='counter'
     :show='true'
     @success="(value) => $emit('success', value)"
     @cancel="(value) => $emit('cancel', value)"

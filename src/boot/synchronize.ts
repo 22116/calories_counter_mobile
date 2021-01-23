@@ -4,7 +4,7 @@ import {boot} from 'quasar/wrappers'
 import {StateInterface} from 'src/store'
 import {Dark, Loading, colors} from 'quasar'
 import {Store} from 'vuex'
-import {Counter} from 'src/core/models/counter'
+import { Counter, CounterType } from 'src/core/models/counter'
 import { DayData, Profile } from 'src/store/persistent/state'
 
 async function backwardCompatibility(data: { store: Store<StateInterface> }) {
@@ -23,6 +23,16 @@ async function backwardCompatibility(data: { store: Store<StateInterface> }) {
     if (counters[hash].theme === undefined) {
       // 0 always refers to default theme on each counter type
       counters[hash].theme = 0
+
+      await data.store.dispatch('persistent/updateCounter', {
+        counter: counters[hash],
+        hash
+      })
+    }
+
+    if (counters[hash].type === CounterType.Goal && counters[hash].start === undefined) {
+      // 0 always refers to default theme on each counter type
+      counters[hash].start = counters[hash].current
 
       await data.store.dispatch('persistent/updateCounter', {
         counter: counters[hash],
@@ -60,8 +70,8 @@ async function addMissedDays(data: { store: Store<StateInterface> }) {
 function initializeSettings(data: { store: Store<StateInterface> }) {
   const profile: Profile = Object.assign(data.store.getters['persistent/profile'])
 
-  if (profile.dark !== null) {
-    Dark.set(profile.dark)
+  if (profile.dark !== null && profile.dark !== 'auto') {
+    Dark.set(!!profile.dark)
   }
 
   if (profile.theme) {

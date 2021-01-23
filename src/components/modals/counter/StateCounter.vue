@@ -6,18 +6,18 @@
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-input v-model.trim="counterSync.name" label="Name" />
+        <q-input v-model.trim="counter.name" label="Name" />
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-input v-model.trim="counterSync.description" label="Description" />
+        <q-input v-model.trim="counter.description" label="Description" />
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-select v-model="counterSync.icon" :options="icons" label="Icon">
+        <q-select v-model="counter.icon" :options="icons" label="Icon">
           <template v-slot:append>
             <q-avatar>
-              <q-icon :name="counterSync.icon" />
+              <q-icon :name="counter.icon" />
             </q-avatar>
           </template>
           <template v-slot:option="scope">
@@ -55,114 +55,114 @@
         </q-select>
       </q-card-section>
 
-      <q-card-section v-if="isLimitedType" class="q-pt-none">
-        <q-input v-model.number="counterSync.limit" min="0" label="Limit" />
-        <q-input v-model.number="counterSync.current" min="0" label="Default" />
+      <q-card-section v-if="isLimitedCounter(counter)" class="q-pt-none">
+        <q-input v-model.number="additionalProperties.limit" min="0" label="Limit" />
+        <q-input v-model.number="additionalProperties.current" min="0" label="Default" />
       </q-card-section>
 
-      <q-card-section v-if="isGoalType" class="q-pt-none">
-        <q-input v-model.number="counterSync.current" min="0" label="Goal" />
+      <q-card-section v-if="isGoalCounter(counter)" class="q-pt-none">
+        <q-input v-model.number="additionalProperties.current" min="0" label="Goal" />
       </q-card-section>
 
-      <q-card-section v-if="isBinaryType" class="q-pt-none">
+      <q-card-section v-if="isBinaryCounter(counter)" class="q-pt-none">
         <q-select v-model="theme" :options="binaryThemes" label="Theme" />
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
         <q-btn flat label="Cancel" @click="$emit('cancel')" v-close-popup />
-        <q-btn flat label="Add" @click="$emit('success', counterSync)" v-close-popup />
+        <q-btn flat label="Add" @click="$emit('success', counter)" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
 
 <script lang="ts">
-import { Component, Prop, PropSync, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, PropSync, VModel, Watch } from 'vue-property-decorator'
 import { BinaryCounterTheme, Counter, CounterType } from 'src/core/models/counter'
 import { setType } from 'src/core/methods/counter'
 import { getCounterTypeDescription } from 'src/core/methods/counter'
 import { formatEnum } from 'src/utility/helper'
+import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
+import iconsList from '../../models/icons'
+
+type Option = { label: string, value: number }
+type AdditionalProperties = { current: number, limit: number, start: number }
+
+const defaultOption = { label: 'Unknown', value: 0 }
 
 @Component
-export default class StateCounter extends Vue {
+export default class StateCounter extends CounterTypeMixin {
   @Prop({type: String, required: true}) public title!: string
-  @PropSync('counter', {type: Object, required: true}) public counterSync!: Counter
+  @VModel({type: Object, required: true}) public counter!: Counter
   @PropSync('show', {type: Boolean, default: false}) public prompt!: boolean
 
-  public type = {
-    label: 'Binary',
-    value: 0,
+  public type: Option = defaultOption
+  public theme: Option = defaultOption
+  public icons = iconsList
+
+  public additionalProperties: AdditionalProperties = {
+    current: 100,
+    limit: 100,
+    start: 100,
   }
-  public theme = {
-    label: 'Default',
-    value: 0,
-  }
-  public icons = [
-    'label',
-    'help',
-    'gavel',
-    'grade',
-    'mediation',
-    'offline_bolt',
-    'preview',
-    'reorder',
-    'source',
-    'touch_app',
-    'visibility',
-    'error',
-    'loop',
-    'movie',
-    'web',
-    'call',
-    'calculate',
-  ]
 
   mounted() {
     this.type = {
-      label: formatEnum(CounterType)[this.counterSync.type],
-      value: this.counterSync.type,
+      label: formatEnum(CounterType)[this.counter.type],
+      value: this.counter.type,
     }
 
     this.theme = {
-      label: formatEnum(BinaryCounterTheme)[this.counterSync.theme],
-      value: this.counterSync.theme,
+      label: formatEnum(BinaryCounterTheme)[this.counter.theme],
+      value: this.counter.theme,
+    }
+
+    if (this.counter.hasOwnProperty('start')) {
+      this.additionalProperties.start = this.counter.start as number
+    }
+
+    if (this.counter.hasOwnProperty('limit')) {
+      this.additionalProperties.limit = this.counter.limit as number
+    }
+
+    if (this.counter.hasOwnProperty('current')) {
+      this.additionalProperties.current = this.counter.current as number
     }
   }
 
   get types() {
-    return formatEnum(CounterType)
-      .map((label, value) => Object.create({ label, value }) as { label: string, value: number })
+    return formatEnum(CounterType).map((label, value) => Object.create({ label, value }) as Option)
   }
 
   get binaryThemes() {
-    return formatEnum(BinaryCounterTheme)
-      .map((label, value) => Object.create({ label, value }) as { label: string, value: number })
-  }
-
-  get isLimitedType(): boolean {
-    return this.counterSync.type === CounterType.Limited
-  }
-
-  get isGoalType(): boolean {
-    return this.counterSync.type === CounterType.Goal
-  }
-
-  get isBinaryType(): boolean {
-    return this.counterSync.type === CounterType.Binary
+    return formatEnum(BinaryCounterTheme).map((label, value) => Object.create({ label, value }) as Option)
   }
 
   getDescription(type: CounterType): string {
     return getCounterTypeDescription(type)
   }
 
+  @Watch('additionalProperties', {deep: true})
+  additionalPropertiesChanged(props: AdditionalProperties) {
+    if (this.isLimitedCounter(this.counter)) {
+      this.counter.limit = props.limit
+      this.counter.current = props.current
+    }
+
+    if (this.isGoalCounter(this.counter)) {
+      this.counter.start = props.current
+      this.counter.current = props.current
+    }
+  }
+
   @Watch('type')
   onTypeChanged(typeData: {value: CounterType}) {
-    setType(this.counterSync, typeData.value)
+    setType(this.counter, typeData.value)
   }
 
   @Watch('theme')
   onThemeChanged(themeData: {value: number}) {
-    this.counterSync.theme = themeData.value
+    this.counter.theme = themeData.value
   }
 }
 </script>

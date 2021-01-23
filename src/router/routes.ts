@@ -9,6 +9,7 @@ const routes: RouteConfig[] = [
       { path: '/history', component: () => import('pages/History.vue') },
       { path: '/counter/:hash/:date', component: () => import('pages/Counter.vue') },
       { path: '/settings', component: () => import('pages/Settings.vue') },
+      { path: '/statistics', component: () => import('pages/Statistics.vue') },
     ]
   },
 

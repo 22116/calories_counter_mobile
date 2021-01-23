@@ -7,9 +7,12 @@ const fs = new Filesystem()
 
 const mutation: MutationTree<PersistentStoreInterface> = {
   async updateStore(state: PersistentStoreInterface, context: PersistentStoreInterface): Promise<void> {
-    state.history = context.history
-    state.profile = context.profile
-    state.counters = context.counters
+    for (const key in state) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      state[key] = context[key]
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     await fs.writeCache(JSON.stringify(state)).catch(() => {})

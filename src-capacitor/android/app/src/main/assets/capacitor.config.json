@@ -1,6 +1,6 @@
 {
   "appId": "lsbproject.counter.app",
-  "appName": "Daily Counter",
+  "appName": "DCounter",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www"

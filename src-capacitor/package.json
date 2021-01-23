@@ -1,7 +1,7 @@
 {
   "name": "daily-counter-android",
   "version": "0.1.1",
-  "description": "Application to count something for a daily basis or something else",
+  "description": "Application to count something for a daily basis",
   "author": "victor.fedorenko <victor.fedorenko@mgid.com>",
   "private": true,
   "dependencies": {

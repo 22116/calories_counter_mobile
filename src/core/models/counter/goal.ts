@@ -8,4 +8,5 @@ export interface GoalCounter extends Counter {
   type: CounterType.Goal,
   theme: GoalCounterTheme,
   current: number,
+  start: number
 }

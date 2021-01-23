@@ -2,7 +2,7 @@
   <q-btn label="Create counter" color="primary" icon-right="add_task" @click="prompt = true">
     <state-counter
       title='Which counter you would like to create?'
-      :counter='counter'
+      v-model='counter'
       :show='prompt'
       @success="$emit('success', counter)"
       @update:show='(value) => prompt = value'

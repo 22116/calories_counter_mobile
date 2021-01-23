@@ -4,8 +4,7 @@
       <q-toggle label="Use dark theme" v-model="profile.dark" />
     </div>
     <div class='row full-width'>
-      <div class='col-12'>Theme color:</div>
-      <q-color no-header v-model="profile.theme" class="my-picker full-width" />
+      <color label="Change application color" v-model='profile.theme' @update:theme='(theme) => themeChanged(theme)' />
     </div>
   </div>
 </template>
@@ -14,8 +13,10 @@
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { Profile } from 'src/store/persistent/state'
 import { colors } from 'quasar'
-
-@Component
+import Color from 'components/helpers/modals/Color.vue'
+@Component({
+  components: { Color }
+})
 export default class Settings extends Vue {
   public profile: Profile;
 

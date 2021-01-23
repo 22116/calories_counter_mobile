@@ -20,6 +20,7 @@
                 <q-item
                   v-bind="scope.itemProps"
                   v-on="scope.itemEvents"
+                  :class='scope.opt.class'
                 >
                   <q-item-section v-if="scope.opt.icon" avatar>
                     <q-icon :name="scope.opt.icon" />
@@ -59,9 +60,9 @@
 import { Vue, Component, Watch } from 'vue-property-decorator'
 import { dateFormat } from 'src/utility/helper'
 import { History } from 'src/store/persistent/state'
-import { CounterType } from 'src/core/models/counter'
+import { isSucceed } from 'src/core/methods/counter'
 
-type Option = {label: string, value: string, description: string, icon: string|null};
+type Option = {label: string, value: string, description: string, icon: string|null, class: Record<string, boolean>};
 
 @Component({
   filters: { dateFormat }
@@ -90,10 +91,8 @@ export default class PageHistory extends Vue {
     for (let hash in day.counters) {
       const counter = day.counters[hash]
 
-      switch (counter.type) {
-        case CounterType.Binary: if (!counter.value) return 'red'; continue
-        case CounterType.Limited: if ((counter.current as number) > (counter.limit as number)) return 'red'; continue
-        case CounterType.Goal: if (counter.current) return 'red'
+      if (!isSucceed(counter)) {
+        return 'red'
       }
     }
 
@@ -106,14 +105,21 @@ export default class PageHistory extends Vue {
 
     if (date !== null && new Date(date).toDateString() !== today && this.history[new Date(date).toDateString()]) {
       const counters = this.history[new Date(date).toDateString()].counters
+
       this.counterOptions = []
 
       for (let hash in counters) {
+        const succeed = isSucceed(counters[hash])
+
         this.counterOptions.push({
           value: hash,
           label: counters[hash].name,
           description: counters[hash].description,
           icon: counters[hash].icon,
+          class: {
+            'bg-green-transparent': succeed,
+            'bg-red-transparent': !succeed,
+          }
         })
       }
 

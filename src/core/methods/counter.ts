@@ -13,14 +13,25 @@ export function setType(counter: Counter, type: CounterType) {
 
   if (counter.type === CounterType.Goal) {
     counter.current = 100
+    counter.start = 100
   } else {
     delete counter.current
+    delete counter.start
   }
 
   if (counter.type === CounterType.Binary) {
     counter.value = false
   } else {
     delete counter.value
+  }
+}
+
+export function isSucceed(counter: Counter): boolean {
+  switch (counter.type) {
+    case CounterType.Binary: return !!counter.value
+    case CounterType.Goal: return counter.current === 0
+    case CounterType.Limited: return (counter.current as number) <= (counter.limit as number)
+    default: return true
   }
 }
 

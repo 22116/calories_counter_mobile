@@ -10,6 +10,10 @@
         {{ caption }}
       </q-item-label>
     </q-item-section>
+
+    <q-item-section side>
+      <slot></slot>
+    </q-item-section>
   </q-item>
 </template>
 
