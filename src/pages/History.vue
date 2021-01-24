@@ -14,7 +14,7 @@
             <q-item
               v-if='!!countersOptions'
               v-for='hash in Object.keys(countersOptions)'
-              :key='countersOptions[hash].createdDate'
+              :key='new Date(countersOptions[hash].createdDate).getTime() + hash'
               tag="label"
               v-ripple
             >
