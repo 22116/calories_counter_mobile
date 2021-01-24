@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='q-mt-sm'>
     <q-date
       v-model="date"
       :events="events"

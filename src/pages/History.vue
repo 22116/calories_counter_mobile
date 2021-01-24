@@ -1,22 +1,23 @@
 <template>
   <q-page class="justify-evenly">
     <history-calendar :history='history' :white-list-hashes='whiteListHashes' class="row q-gutter-md q-pa-lg" />
+
     <div class="row q-gutter-md q-pa-lg">
       <q-badge color="red">Some of the counters are not passed</q-badge>
       <q-badge color="green">All counters reached</q-badge>
     </div>
+
     <div class="row q-gutter-md q-pa-lg">
-      <q-expansion-item
-        class="shadow-1 overflow-hidden full-width"
-        style="border-radius: 5px"
-        icon="article"
-        label="Counters to watch"
-        header-class="bg-primary text-white"
-        expand-icon-class="text-white"
-      >
+      <q-dialog v-model='showList'>
         <q-card>
           <q-card-section>
-            <q-item v-for='hash in Object.keys(countersOptions)' :key='hash' tag="label" v-ripple>
+            <q-item
+              v-if='!!countersOptions'
+              v-for='hash in Object.keys(countersOptions)'
+              :key='countersOptions[hash].createdDate'
+              tag="label"
+              v-ripple
+            >
               <q-item-section avatar>
                 <q-checkbox v-model="countersOptions[hash].value" />
               </q-item-section>
@@ -28,14 +29,27 @@
                 <q-item-label caption>{{ countersOptions[hash].description }}</q-item-label>
               </q-item-section>
             </q-item>
+            <q-item v-else>
+              <q-item-section>
+                No counters data were added yet
+              </q-item-section>
+            </q-item>
           </q-card-section>
+          <q-card-actions align="center" class="text-primary">
+            <q-btn flat label="Close" v-close-popup />
+          </q-card-actions>
         </q-card>
-      </q-expansion-item>
+      </q-dialog>
     </div>
+
     <div class="row q-gutter-md q-pa-lg text-grey">
       Help: Tap on the day to switch on the counter in the past. You can
       switch to the date where you already have registered counter.
     </div>
+
+    <q-page-sticky position="top-right" :offset="[5, 25]">
+      <q-btn fab icon="more_vert" color="primary" @click='() => showList = !showList' />
+    </q-page-sticky>
   </q-page>
 </template>
 
@@ -60,6 +74,7 @@ type CounterCheckbox = {
 export default class PageHistory extends Vue {
   public history: History
   public countersOptions: Record<Hash, CounterCheckbox> = {}
+  public showList: boolean = false
 
   public constructor() {
     super()
@@ -97,3 +112,8 @@ export default class PageHistory extends Vue {
   }
 };
 </script>
+
+<style lang='sass'>
+.q-date__header
+  display: none
+</style>
