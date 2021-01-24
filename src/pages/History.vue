@@ -11,24 +11,25 @@
       <q-dialog v-model='showList'>
         <q-card>
           <q-card-section>
-            <q-item
-              v-if='!!countersOptions'
-              v-for='hash in Object.keys(countersOptions)'
-              :key='new Date(countersOptions[hash].createdDate).getTime() + hash'
-              tag="label"
-              v-ripple
-            >
-              <q-item-section avatar>
-                <q-checkbox v-model="countersOptions[hash].value" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>
-                  <q-icon :name="countersOptions[hash].icon" />
-                  {{ countersOptions[hash].name }} ({{ countersOptions[hash].createdDate }})
-                </q-item-label>
-                <q-item-label caption>{{ countersOptions[hash].description }}</q-item-label>
-              </q-item-section>
-            </q-item>
+            <template v-if='!!countersOptions'>
+              <q-item
+                v-for='hash in Object.keys(countersOptions)'
+                :key='new Date(countersOptions[hash].createdDate).getTime() + hash'
+                tag="label"
+                v-ripple
+              >
+                <q-item-section avatar>
+                  <q-checkbox v-model="countersOptions[hash].value" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    <q-icon :name="countersOptions[hash].icon" />
+                    {{ countersOptions[hash].name }} ({{ countersOptions[hash].createdDate }})
+                  </q-item-label>
+                  <q-item-label caption>{{ countersOptions[hash].description }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </template>
             <q-item v-else>
               <q-item-section>
                 No counters data were added yet
@@ -74,7 +75,7 @@ type CounterCheckbox = {
 export default class PageHistory extends Vue {
   public history: History
   public countersOptions: Record<Hash, CounterCheckbox> = {}
-  public showList: boolean = false
+  public showList = false
 
   public constructor() {
     super()
@@ -90,7 +91,7 @@ export default class PageHistory extends Vue {
 
         this.countersOptions[hash] = {
           value: true,
-          icon: counter.icon,
+          icon: counter.icon || '',
           name: counter.name,
           description: counter.description,
           createdDate: counter.createdAt
