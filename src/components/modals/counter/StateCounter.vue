@@ -10,7 +10,7 @@
         </q-carousel-slide>
         <q-carousel-slide :name="1">
           <q-card-section>
-            <div class="text-h6">Choose counter style</div>
+            <div class="text-h6">Choose counter type</div>
           </q-card-section>
           <type v-model='counter' @input='onCounterChanged' />
         </q-carousel-slide>
@@ -68,6 +68,7 @@ export default class StateCounter extends Vue {
     if (this.sliderIndex === 2) {
       this.prompt = false
       this.$emit('success', this.counter)
+      this.sliderIndex = 0
     } else {
       this.sliderIndex++
     }

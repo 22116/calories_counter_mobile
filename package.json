@@ -11,8 +11,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build --mode capacitor --target android",
-    "genkey": "keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 20000",
-    "sign": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore ./dist/capacitor/android/apk/release/app-release-unsigned.apk alias_name"
+    "genkey": "keytool -genkey -v -keystore my-release-key.keystore -alias lsbproject -keyalg RSA -keysize 2048 -validity 40000",
+    "sign": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore ./dist/capacitor/android/apk/release/app-release-unsigned.apk lsbproject"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
