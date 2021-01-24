@@ -11,7 +11,7 @@
       <q-dialog v-model='showList'>
         <q-card>
           <q-card-section>
-            <template v-if='!!countersOptions'>
+            <template v-if='!!Object.keys(countersOptions).length'>
               <q-item
                 v-for='hash in Object.keys(countersOptions)'
                 :key='new Date(countersOptions[hash].createdDate).getTime() + hash'
@@ -30,11 +30,13 @@
                 </q-item-section>
               </q-item>
             </template>
-            <q-item v-else>
-              <q-item-section>
-                No counters data were added yet
-              </q-item-section>
-            </q-item>
+            <template v-else>
+              <q-item>
+                <q-item-section>
+                  No counters data were added yet
+                </q-item-section>
+              </q-item>
+            </template>
           </q-card-section>
           <q-card-actions align="center" class="text-primary">
             <q-btn flat label="Close" v-close-popup />
