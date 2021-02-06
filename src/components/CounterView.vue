@@ -12,17 +12,18 @@ import GoalCounter from './counters/GoalCounter.vue'
 import BinaryCounter from './counters/BinaryCounter.vue'
 import LimitedCounter from './counters/LimitedCounter.vue'
 import CounterTypeMixin from './mixins/CounterTypeMixin'
-import { Counter } from '../core/models/counter'
+import { Counter } from 'src/core/entities'
+import { Score } from 'src/core/entities/Counter'
 
 @Component({
   components: {GoalCounter, BinaryCounter, LimitedCounter }
 })
 export default class CounterView  extends CounterTypeMixin {
-  @VModel({type: Object, required: true}) public counter!: Counter
+  @VModel({type: Object, required: true}) public counter!: Counter<Score>
   @Prop({type: String, default: 'q-page'}) public readonly tag!: string
 
   @Emit('input')
-  updateCounterData(counter: Counter) {
+  updateCounterData(counter: Counter<Score>) {
     return counter
   }
 }

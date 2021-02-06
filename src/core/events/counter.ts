@@ -1,11 +1,11 @@
-import {Counter} from 'src/core/models/counter'
+import { Counter, Score } from 'src/core/entities/counter'
 import {Notify} from 'quasar'
-import {Hash} from 'src/store/persistent/state'
-import {Store} from 'vuex'
-import {StateInterface} from 'src/store'
+import { ORM } from 'src/types/database'
+import { History } from 'src/core/entities'
+import { IdGenerator } from 'src/utility/encryption'
 
-export async function counterCreatedEvent(store: Store<StateInterface>, counter: Counter) {
-  await store.dispatch('persistent/addCounter', counter)
+export async function counterCreatedEvent(orm: ORM, counter: Counter<Score>) {
+  await orm.repository.counter.save(counter)
 
   Notify.create({
     type: 'positive',
@@ -13,8 +13,10 @@ export async function counterCreatedEvent(store: Store<StateInterface>, counter:
   })
 }
 
-export async function counterDeletedEvent(store: Store<StateInterface>, hash: Hash) {
-  await store.dispatch('persistent/removeCounter', hash)
+export async function counterDeletedEvent(orm: ORM, counter: Counter<Score>) {
+  counter.enabled = false
+
+  await orm.repository.counter.update(counter)
 
   Notify.create({
     type: 'positive',
@@ -22,9 +24,23 @@ export async function counterDeletedEvent(store: Store<StateInterface>, hash: Ha
   })
 }
 
-export async function counterUpdatedEvent(store: Store<StateInterface>, hash: Hash, counter: Counter) {
-  await store.dispatch('persistent/updateCounter', { counter, hash })
-  await store.dispatch('persistent/updateDateCounter', { counter, hash, date: new Date() })
+export async function counterUpdatedEvent(orm: ORM, counter: Counter<Score>) {
+  await orm.repository.counter.save(counter)
+  const history = await orm.repository.history.findByDateAndCounterId(new Date(), counter.id)
+
+  if (history) {
+    history.scores = counter.scores
+
+    await orm.repository.history.update(history)
+  } else {
+    const history = new History()
+    history.date = new Date()
+    history.scores = counter.scores
+    history.counter_id = counter.id
+    history.id = new IdGenerator().generate()
+
+    await orm.repository.history.save(history)
+  }
 
   Notify.create({
     type: 'positive',

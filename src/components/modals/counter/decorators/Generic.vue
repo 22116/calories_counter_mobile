@@ -35,12 +35,12 @@
 
 <script lang="ts">
 import { Component, VModel, Vue } from 'vue-property-decorator'
-import { Counter } from 'src/core/models/counter'
+import { Counter, Score } from 'src/core/entities/counter'
 import iconsList from 'src/components/models/icons'
 
 @Component
 export default class Generic extends Vue {
-  @VModel({type: Object, required: true}) public counter!: Counter
+  @VModel({type: Object, required: true}) public counter!: Counter<Score>
 
   public icons = iconsList
 }

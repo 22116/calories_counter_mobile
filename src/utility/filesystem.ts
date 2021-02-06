@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="cordova-plugin-file" />
 
 export class CordovaError extends Error { }

@@ -3,8 +3,8 @@
     <q-circular-progress
       show-value
       font-size="32px"
-      :value="counterSync.current"
-      :max="counterSync.start"
+      :value="counterSync.scores.current"
+      :max="counterSync.scores.start"
       size="300px"
       :thickness="0.22"
       color="grey-3"
@@ -12,7 +12,7 @@
       class="col-auto justify-center"
     >
       <span v-if="!completed">
-        {{ counterSync.current }} left
+        {{ counterSync.scores.current }} left
       </span>
       <span v-else>
         Passed!
@@ -39,23 +39,25 @@
 import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
 import AddButton from 'components/helpers/buttons/AddButton.vue'
 import Confirm from 'components/helpers/buttons/Confirm.vue'
-import { GoalCounter as Type } from 'src/core/models/counter'
+import { Counter } from 'src/core/entities'
+import { GoalCounterScore } from 'src/core/entities/Counter'
 
 @Component({
   components: { Confirm, AddButton }
 })
 export default class GoalCounter extends Vue {
-  @PropSync('counter', { type: Object, required: true }) public counterSync!: Type
+  @PropSync('counter', { type: Object, required: true })
+  public counterSync!: Counter<GoalCounterScore>
   public completed = false
 
   mounted() {
-    this.completed = this.counterSync.current === 0
+    this.completed = this.counterSync.scores.current === 0
   }
 
   @Emit('update:counter')
   forward(current: number) {
-    if (this.counterSync.current <= current) {
-      this.counterSync.current = 0
+    if (this.counterSync.scores.current <= current) {
+      this.counterSync.scores.current = 0
       this.completed = true
 
       this.$q.notify({
@@ -63,7 +65,7 @@ export default class GoalCounter extends Vue {
         message: 'Goal is done for today. Great job!'
       })
     } else {
-      this.counterSync.current -= current
+      this.counterSync.scores.current -= current
     }
 
     return this.counterSync
@@ -72,7 +74,7 @@ export default class GoalCounter extends Vue {
   @Emit('update:counter')
   back(current: number) {
     if (current > 0) this.completed = false
-    this.counterSync.current += current
+    this.counterSync.scores.current += current
 
     return this.counterSync
   }

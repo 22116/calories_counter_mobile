@@ -12,7 +12,6 @@ export function dateFormat(x: Date, y: string): string {
     s: x.getSeconds()
   }
   y = y.replace(/(M+|d+|h+|m+|s+)/g, function(v) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     return ((v.length > 1 ? '0' : '') + z[v.slice(-1)]).slice(-2)

@@ -39,10 +39,9 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, VModel, Vue, Watch } from 'vue-property-decorator'
-import {Counter} from 'src/core/models/counter'
+import { Counter, Score } from 'src/core/entities/counter'
 import StateCounter from 'components/modals/counter/StateCounter.vue'
 import { isSucceed } from 'src/core/methods/counter'
-import { Hash } from 'src/store/persistent/state'
 
 type Option = {
   value: string,
@@ -57,7 +56,7 @@ type Option = {
 })
 export default class SwitchCounter extends Vue {
   @VModel({type: Boolean, required: true}) public readonly show!: boolean
-  @Prop({type: Object, required: true}) public readonly counters!: Record<Hash, Counter>
+  @Prop({type: Array, required: true}) public readonly counters!: Array<Counter<Score>>
   public counterOption: Option|null = null
   public counterOptions: Array<Option> = []
 
@@ -65,14 +64,14 @@ export default class SwitchCounter extends Vue {
   public onCountersChanged() {
     this.counterOptions = []
 
-    for (const hash in this.counters) {
-      const succeed = isSucceed(this.counters[hash])
+    for (const counter of this.counters) {
+      const succeed = isSucceed(counter)
 
       this.counterOptions.push({
-        value: hash,
-        label: this.counters[hash].name,
-        description: this.counters[hash].description,
-        icon: this.counters[hash].icon || '',
+        value: counter.id,
+        label: counter.name,
+        description: counter.description,
+        icon: counter.icon || '',
         class: {
           'bg-green-transparent': succeed,
           'bg-red-transparent': !succeed,

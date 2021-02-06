@@ -55,7 +55,7 @@
         </confirm-slider-left>
         <q-item>
           <q-item-section>
-            <create-counter @success="counterCreated" />
+            <create-counter @success="counterCreated" :key='counterLinks.length' />
           </q-item-section>
         </q-item>
         <q-item class='tip'>
@@ -89,8 +89,7 @@ import EssentialLink from 'components/helpers/EssentialLink.vue'
 import CreateCounter from 'components/modals/counter/CreateCounter.vue'
 import EditCounter from 'components/modals/counter/EditCounter.vue'
 import { Component, Vue } from 'vue-property-decorator'
-import { Hash } from 'src/store/persistent/state'
-import { Counter } from 'src/core/models/counter'
+import { Counter, Score } from 'src/core/entities/counter'
 import { counterCreatedEvent, counterDeletedEvent, counterUpdatedEvent } from 'src/core/events/counter'
 import { isSucceed } from 'src/core/methods/counter'
 import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
@@ -103,69 +102,77 @@ export default class MainLayout extends Vue {
   public leftDrawerOpen = false
   public essentialLinks = links
   public counterLinks: Array<{ hash: string }> = []
-  public counters: Record<Hash, Counter> = {}
-  public counter: Counter|null = null
+  public counters: Array<Counter<Score>> = []
+  public counter: Counter<Score>|null = null
   public hash = ''
   public date = new Date()
   public timer = 0
 
-  mounted() {
-    this.loadUserCounters()
-    this.timer = window.setInterval(() => this.date = new Date(), 1000)
+  async mounted() {
+    await this.loadUserCounters()
+    this.timer = window.setInterval(() => {
+      this.date = new Date()
+      void this.loadUserCounters()
+    }, 500)
   }
 
-  public async counterCreated(counter: Counter) {
-    await counterCreatedEvent(this.$store, counter).then(() => this.loadUserCounters())
+  async counterCreated(counter: Counter<Score>) {
+    await counterCreatedEvent(this.$orm, counter).then(() => this.loadUserCounters())
   }
 
-  public async onCounterDeleted(hash: Hash) {
-    await counterDeletedEvent(this.$store, hash).then(() => this.loadUserCounters())
+  async onCounterDeleted(hash: string) {
+    const counter = this.counters.find((counter) => counter.id === hash)
+
+    if (!counter) {
+      console.error('No counter to delete found')
+
+      return
+    }
+
+    await counterDeletedEvent(this.$orm, counter).then(() => this.loadUserCounters())
   }
 
-  public async onCounterEdited(counter: Counter) {
-    await counterUpdatedEvent(this.$store, this.hash, counter)
+  async onCounterEdited(counter: Counter<Score>) {
+    await counterUpdatedEvent(this.$orm, counter)
       .then(() => this.loadUserCounters())
       .then(() => this.counter = null)
       .then(() => this.$router.push('/').catch(() => console.log('Already on /history')))
   }
 
-  public onCounterLinkHold(hash: Hash) {
+  async onCounterLinkHold(hash: string) {
     this.hash = hash
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-    this.counter = this.$store.getters['persistent/counterByHash'](this.date, hash)
+    this.counter = await this.$orm.repository.counter.find(hash)
   }
 
-  public loadUserCounters() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-    this.counters = this.$store.getters['persistent/userCounters']
+  async loadUserCounters() {
+    this.counters = await this.$orm.repository.counter.findAll()
   }
 
-  public get counterLinksSync() {
+  get counterLinksSync() {
     this.counterLinks = []
 
-    for (let hash in this.counters) {
-      this.counterLinks.push(this.createCounterLink(this.counters[hash], hash, this.date))
+    for (const counter of this.counters) {
+      if (counter.enabled) {
+        this.counterLinks.push(this.createCounterLink(counter, this.date))
+      }
     }
 
     return this.counterLinks
   }
 
-  public createCounterLink(counter: Counter, hash: Hash, date: Date) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-    counter = this.$store.getters['persistent/counterByHash'](date, hash) || this.counters[hash]
+  createCounterLink(counter: Counter<Score>, date: Date) {
     const succeed = isSucceed(counter)
 
     return {
       title: counter.name,
       caption: counter.description,
       icon: counter.icon,
-      link: `/counter/${hash}/${date.toDateString()}`,
+      link: `/counter/${counter.id}/${date.toISOString()}`,
       class: {
         'bg-green-transparent': succeed,
         'bg-red-transparent': !succeed,
       },
-      hash
+      hash: counter.id
     }
   }
 

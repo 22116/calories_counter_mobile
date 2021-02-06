@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import * as uuid from 'uuid'
+import { v4 } from 'uuid'
 
 export interface HashGenerator {
   generate(size: number): string;
@@ -8,6 +6,6 @@ export interface HashGenerator {
 
 export class IdGenerator implements HashGenerator {
   generate(): string {
-    return uuid.v4()
+    return v4()
   }
 }

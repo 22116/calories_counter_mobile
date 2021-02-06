@@ -11,10 +11,10 @@ export default [
     icon: 'settings',
     link: '/settings'
   },
-  // {
-  //   title: 'Statistics',
-  //   caption: 'Explore your results',
-  //   icon: 'analytics',
-  //   link: '/statistics'
-  // },
+  {
+    title: 'Statistics',
+    caption: 'Explore your results',
+    icon: 'analytics',
+    link: '/statistics'
+  },
 ]

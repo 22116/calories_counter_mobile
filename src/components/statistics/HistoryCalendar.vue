@@ -13,42 +13,40 @@
 
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
-import { dateFormat } from 'src/utility/helper'
-import { Hash, History } from 'src/store/persistent/state'
 import { isSucceed } from 'src/core/methods/counter'
 import SwitchCounter from 'components/modals/counter/SwitchCounter.vue'
-import { Counter } from 'src/core/models/counter'
+import { Counter, Score } from 'src/core/entities/counter'
+import { History } from 'src/core/entities'
+import { date } from 'quasar'
+import formatDate = date.formatDate
 
 type Option = {label: string, value: string, description: string, icon: string|null, class: Record<string, boolean>};
 
 @Component({
   components: { SwitchCounter },
-  filters: { dateFormat }
 })
 export default class HistoryCalendar extends Vue {
-  public readonly FORMAT = 'yyyy/MM/dd'
+  public readonly FORMAT = 'YYYY/MM/DD'
 
-  @Prop({type: Object, required: true}) public history!: History
-  @Prop({type: Array, default: []}) public whiteListHashes!: Array<Hash>
+  @Prop({type: Array, required: true}) public history!: Array<History>
+  @Prop({type: Array, default: []}) public whiteListHashes!: Array<string>
 
   public prompt = false
-  public date = dateFormat(new Date(), this.FORMAT)
+  public date = formatDate(new Date(), this.FORMAT)
   public events: Array<string> = []
-  public counters: Record<Hash, Counter> = {}
+  public counters: Array<Counter<Score>> = []
 
   mounted() {
-    this.events = Object.keys(this.history).map((date: string) => dateFormat(new Date(date), this.FORMAT))
+    this.events = this.history.map((history: History) => formatDate(history.date, this.FORMAT))
   }
 
-  eventColor(date: string): string {
-    const day = this.history[new Date(date).toDateString()]
+  async eventColor(date: string): Promise<string> {
+    const counters = await this.$orm.repository.history.findDailyCountersByDate(new Date(date))
 
-    for (let hash in day.counters) {
-      if (!this.whiteListHashes.includes(hash)) {
+    for (const counter of counters) {
+      if (!this.whiteListHashes.includes(counter.id)) {
         continue
       }
-
-      const counter = day.counters[hash]
 
       if (!isSucceed(counter)) {
         return 'red'
@@ -59,7 +57,7 @@ export default class HistoryCalendar extends Vue {
   }
 
   @Watch('date')
-  dateChanged(date: string|null) {
+  async dateChanged(date: string|null) {
     if (!date) {
       return
     }
@@ -67,13 +65,13 @@ export default class HistoryCalendar extends Vue {
     const concrete = new Date(date).toDateString()
     const today = new Date().toDateString()
 
-    if (concrete !== today && this.history[concrete]) {
-      this.counters = this.history[concrete].counters
+    if (concrete !== today && this.history.find((row) => row.date.toDateString() === concrete)) {
+      this.counters = await this.$orm.repository.history.findDailyCountersByDate(new Date(date))
       this.prompt = true
     }
   }
 
-  public async switchCounter(hash: Hash) {
+  public async switchCounter(hash: string) {
     await this.$router.push(`/counter/${hash}/${new Date(this.date).toDateString()}`)
   }
 };

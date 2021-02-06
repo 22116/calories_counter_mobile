@@ -42,7 +42,7 @@
 import { Component, Prop, PropSync, VModel, Vue, Watch } from 'vue-property-decorator'
 import Generic from 'components/modals/counter/decorators/Generic.vue'
 import Type from 'components/modals/counter/decorators/Type.vue'
-import { Counter } from 'src/core/models/counter'
+import { Counter, Score } from 'src/core/entities/counter'
 import CounterView from 'components/CounterView.vue'
 import { clone } from 'src/utility/helper'
 
@@ -51,7 +51,7 @@ import { clone } from 'src/utility/helper'
 })
 export default class StateCounter extends Vue {
   @Prop({type: String, required: true}) public readonly title!: string
-  @VModel({type: Object, required: true}) public counter!: Counter
+  @VModel({type: Object, required: true}) public counter!: Counter<Score>
   @PropSync('show', {type: Boolean, default: false}) public prompt!: boolean
 
   public sliderIndex = 0
@@ -59,7 +59,7 @@ export default class StateCounter extends Vue {
   public counterPreviewKey = 0
 
   @Watch('counter', {deep: true, immediate: true})
-  onCounterChanged(counter: Counter) {
+  onCounterChanged(counter: Counter<Score>) {
     this.counterPreview = clone(counter)
     this.counterPreviewKey++
   }

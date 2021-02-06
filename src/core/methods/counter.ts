@@ -1,38 +1,54 @@
-import { Counter, CounterType } from 'src/core/models/counter'
+import { Counter, CounterType, Score } from 'src/core/entities/counter'
 
-export function setType(counter: Counter, type: CounterType) {
+export function setType(counter: Counter<Score>, type: CounterType) {
   counter.type = type
 
   switch (counter.type) {
     case CounterType.Binary:
-      counter.value = false
-      delete counter.limit
-      delete counter.current
-      delete counter.start
+      counter.scores.value = false
+
+      // @ts-ignore
+      delete counter.scores.limit
+      // @ts-ignore
+      delete counter.scores.current
+      // @ts-ignore
+      delete counter.scores.start
 
       break
     case CounterType.Limited:
-      counter.limit = 100
-      counter.current = 0
-      delete counter.value
-      delete counter.start
+      counter.scores.limit = 100
+      counter.scores.current = 0
+
+      // @ts-ignore
+      delete counter.scores.value
+      // @ts-ignore
+      delete counter.scores.start
 
       break
     case CounterType.Goal:
-      counter.current = 100
-      counter.start = 100
-      delete counter.limit
-      delete counter.value
+      counter.scores.current = 100
+      counter.scores.start = 100
+
+      // @ts-ignore
+      delete counter.scores.limit
+      // @ts-ignore
+      delete counter.scores.value
 
       break
   }
 }
 
-export function isSucceed(counter: Counter): boolean {
+export function isSucceed(counter: Counter<Score>): boolean {
+  const history = counter.history.find((history) => history.date.toDateString() === new Date().toDateString())
+
+  if (!history) {
+    return false
+  }
+
   switch (counter.type) {
-    case CounterType.Binary: return !!counter.value
-    case CounterType.Goal: return counter.current === 0
-    case CounterType.Limited: return (counter.current as number) <= (counter.limit as number)
+    case CounterType.Binary: return !!history.scores.value
+    case CounterType.Goal: return history.scores.current === 0
+    case CounterType.Limited: return (history.scores.current as number) <= (history.scores.limit as number)
     default: return true
   }
 }

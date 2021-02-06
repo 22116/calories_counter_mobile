@@ -30,9 +30,15 @@
 
 <script lang="ts">
 import { Component, Emit, VModel, Watch } from 'vue-property-decorator'
-import { BinaryCounterTheme, Counter, CounterType } from 'src/core/models/counter'
-import { setType } from 'src/core/methods/counter'
-import { getCounterTypeDescription } from 'src/core/methods/counter'
+import {
+  BinaryCounterTheme,
+  Counter,
+  CounterType,
+  GoalCounterScore,
+  LimitedCounterScore,
+  Score
+} from 'src/core/entities/counter'
+import { setType, getCounterTypeDescription } from 'src/core/methods/counter'
 import { formatEnum } from 'src/utility/helper'
 import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
 import CounterView from 'components/CounterView.vue'
@@ -46,7 +52,7 @@ const defaultOption: Option = { label: 'Unknown', value: 0 }
   components: { CounterView }
 })
 export default class Type extends CounterTypeMixin {
-  @VModel({type: Object, required: true}) public counter!: Counter
+  @VModel({type: Object, required: true}) public counter!: Counter<Score>
 
   public type: Option = defaultOption
   public theme: Option = defaultOption
@@ -69,15 +75,15 @@ export default class Type extends CounterTypeMixin {
     }
 
     if (this.counter.hasOwnProperty('start')) {
-      this.additionalProperties.start = this.counter.start as number
+      this.additionalProperties.start = (this.counter.scores as GoalCounterScore).start
     }
 
     if (this.counter.hasOwnProperty('limit')) {
-      this.additionalProperties.limit = this.counter.limit as number
+      this.additionalProperties.limit = (this.counter.scores as LimitedCounterScore).limit
     }
 
     if (this.counter.hasOwnProperty('current')) {
-      this.additionalProperties.current = this.counter.current as number
+      this.additionalProperties.current = (this.counter.scores as LimitedCounterScore).current
     }
   }
 
@@ -97,13 +103,13 @@ export default class Type extends CounterTypeMixin {
   @Watch('additionalProperties', {deep: true})
   additionalPropertiesChanged(props: AdditionalProperties) {
     if (this.isLimitedCounter(this.counter)) {
-      this.counter.limit = props.limit
-      this.counter.current = props.current
+      this.counter.scores.limit = props.limit
+      this.counter.scores.current = props.current
     }
 
     if (this.isGoalCounter(this.counter)) {
-      this.counter.start = props.current
-      this.counter.current = props.current
+      this.counter.scores.start = props.current
+      this.counter.scores.current = props.current
     }
 
     return this.counter

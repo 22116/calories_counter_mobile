@@ -3,16 +3,16 @@
     <q-circular-progress
       show-value
       font-size="32px"
-      :value="counterSync.current"
-      :max="counterSync.limit"
+      :value="counterSync.scores.current"
+      :max="counterSync.scores.limit"
       size="300px"
       :thickness="0.22"
       color="teal"
       track-color="grey-3"
       class="col-auto justify-center"
     >
-      <span :class="{'text-red': counterSync.current > counterSync.limit}">
-        {{ counterSync.current }}/{{ counterSync.limit }}
+      <span :class="{'text-red': counterSync.scores.current > counterSync.scores.limit}">
+        {{ counterSync.scores.current }}/{{ counterSync.scores.limit }}
       </span>
     </q-circular-progress>
     <div class="col-12 q-mt-xl">
@@ -36,24 +36,26 @@
 import { Vue, Component, PropSync, Emit } from 'vue-property-decorator'
 import AddButton from 'components/helpers/buttons/AddButton.vue'
 import Confirm from 'components/helpers/buttons/Confirm.vue'
-import { LimitedCounter as LimitedCounterType } from 'src/core/models/counter'
+import { Counter } from 'src/core/entities'
+import { LimitedCounterScore } from 'src/core/entities/Counter'
 
 @Component({
   components: { Confirm, AddButton }
 })
 export default class LimitedCounter extends Vue {
-  @PropSync('counter', { type: Object, required: true }) public counterSync!: LimitedCounterType;
+  @PropSync('counter', { type: Object, required: true })
+  public counterSync!: Counter<LimitedCounterScore>;
 
   @Emit('update:counter')
   add(current: number) {
-    this.counterSync.current += current
+    this.counterSync.scores.current += current
 
     return this.counterSync
   }
 
   @Emit('update:counter')
   reset() {
-    this.counterSync.current = 0
+    this.counterSync.scores.current = 0
 
     return this.counterSync
   }

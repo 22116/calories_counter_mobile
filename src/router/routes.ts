@@ -3,13 +3,13 @@ import { RouteConfig } from 'vue-router'
 const routes: RouteConfig[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('components/view/layouts/MainLayout.vue'),
     children: [
       { path: '/', redirect: '/history' },
-      { path: '/history', component: () => import('pages/History.vue') },
-      { path: '/counter/:hash/:date', component: () => import('pages/Counter.vue') },
-      { path: '/settings', component: () => import('pages/Settings.vue') },
-      { path: '/statistics', component: () => import('pages/Statistics.vue') },
+      { path: '/history', component: () => import('components/view/pages/History.vue') },
+      { path: '/counter/:hash/:date', component: () => import('components/view/pages/Counter.vue') },
+      { path: '/settings', component: () => import('components/view/pages/Settings.vue') },
+      { path: '/statistics', component: () => import('components/view/pages/Statistics.vue') },
     ]
   },
 
@@ -17,7 +17,7 @@ const routes: RouteConfig[] = [
   // but you can also remove it
   {
     path: '*',
-    component: () => import('pages/Error404.vue')
+    component: () => import('components/view/pages/Error404.vue')
   }
 ]
 
