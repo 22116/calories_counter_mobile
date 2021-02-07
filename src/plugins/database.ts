@@ -6,9 +6,9 @@ export default (Vue: typeof _Vue) => {
   const orm = {
     db: sqlite,
     repository: {
-      counter: new CounterRepository(),
-      setting: new SettingRepository(),
-      history: new HistoryRepository(),
+      counter: Vue.$container.resolve(CounterRepository),
+      setting: Vue.$container.resolve(SettingRepository),
+      history: Vue.$container.resolve(HistoryRepository),
     },
   }
 

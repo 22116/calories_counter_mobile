@@ -39,7 +39,7 @@
         <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link" />
         <confirm-slider-left
           question='Are you sure you want to delete this counter?'
-          v-for="link in counterLinksSync"
+          v-for="link in counterLinks"
           :key="link.title"
           left-color="red"
           @success='() => onCounterDeleted(link.hash)'
@@ -88,12 +88,13 @@
 import EssentialLink from 'components/helpers/EssentialLink.vue'
 import CreateCounter from 'components/modals/counter/CreateCounter.vue'
 import EditCounter from 'components/modals/counter/EditCounter.vue'
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 import { Counter, Score } from 'src/core/entities/counter'
-import { counterCreatedEvent, counterDeletedEvent, counterUpdatedEvent } from 'src/core/events/counter'
-import { isSucceed } from 'src/core/methods/counter'
 import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
 import links from './links'
+import { EventService } from 'src/core/services/EventService'
+import { CounterCreatedEvent, CounterDeletedEvent, CounterUpdatedEvent } from 'src/core/services/events'
+import { CounterService } from 'src/core/services/CounterService'
 
 @Component({
   components: { ConfirmSliderLeft, EditCounter, CreateCounter, EssentialLink }
@@ -110,6 +111,7 @@ export default class MainLayout extends Vue {
 
   async mounted() {
     await this.loadUserCounters()
+
     this.timer = window.setInterval(() => {
       this.date = new Date()
       void this.loadUserCounters()
@@ -117,7 +119,10 @@ export default class MainLayout extends Vue {
   }
 
   async counterCreated(counter: Counter<Score>) {
-    await counterCreatedEvent(this.$orm, counter).then(() => this.loadUserCounters())
+    await this.$container
+      .resolve(EventService)
+      .dispatch(new CounterCreatedEvent(counter))
+      .then(() => this.loadUserCounters())
   }
 
   async onCounterDeleted(hash: string) {
@@ -129,11 +134,16 @@ export default class MainLayout extends Vue {
       return
     }
 
-    await counterDeletedEvent(this.$orm, counter).then(() => this.loadUserCounters())
+    await this.$container
+      .resolve(EventService)
+      .dispatch(new CounterDeletedEvent(counter))
+      .then(() => this.loadUserCounters())
   }
 
   async onCounterEdited(counter: Counter<Score>) {
-    await counterUpdatedEvent(this.$orm, counter)
+    await this.$container
+      .resolve(EventService)
+      .dispatch(new CounterUpdatedEvent(counter))
       .then(() => this.loadUserCounters())
       .then(() => this.counter = null)
       .then(() => this.$router.push('/').catch(() => console.log('Already on /history')))
@@ -148,26 +158,28 @@ export default class MainLayout extends Vue {
     this.counters = await this.$orm.repository.counter.findAll()
   }
 
-  get counterLinksSync() {
-    this.counterLinks = []
+  @Watch('counters', {deep: true, immediate: true})
+  async syncCounterLinks(counters: Array<Counter<Score>>) {
+    const links = []
 
-    for (const counter of this.counters) {
+    for (const counter of counters) {
       if (counter.enabled) {
-        this.counterLinks.push(this.createCounterLink(counter, this.date))
+        links.push(await this.createCounterLink(counter, this.date))
       }
     }
 
-    return this.counterLinks
+    this.counterLinks = links.filter((val) => val !== undefined)
   }
 
-  createCounterLink(counter: Counter<Score>, date: Date) {
-    const succeed = isSucceed(counter)
+  async createCounterLink(counter: Counter<Score>, date: Date) {
+    const history = await this.$orm.repository.history.findByDateAndCounterId(date, counter.id)
+    const succeed = this.$container.resolve(CounterService).isSucceed(history ? history.getCounter() : counter)
 
     return {
       title: counter.name,
       caption: counter.description,
       icon: counter.icon,
-      link: `/counter/${counter.id}/${date.toISOString()}`,
+      link: `/counter/${date.toISOString()}/${counter.id}`,
       class: {
         'bg-green-transparent': succeed,
         'bg-red-transparent': !succeed,

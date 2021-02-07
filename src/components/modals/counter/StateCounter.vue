@@ -43,7 +43,7 @@ import { Component, Prop, PropSync, VModel, Vue, Watch } from 'vue-property-deco
 import Generic from 'components/modals/counter/decorators/Generic.vue'
 import Type from 'components/modals/counter/decorators/Type.vue'
 import { Counter, Score } from 'src/core/entities/counter'
-import CounterView from 'components/CounterView.vue'
+import CounterView from 'components/view/CounterView.vue'
 import { clone } from 'src/utility/helper'
 
 @Component({

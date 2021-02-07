@@ -1,6 +1,8 @@
 import { Repository } from 'src/core/repositories/Repository'
 import { Setting, SettingName } from 'src/core/entities/Setting'
+import { singleton } from 'tsyringe'
 
+@singleton()
 export class SettingRepository extends Repository<Setting> {
   find(name: SettingName, field = 'name'): Promise<Setting> {
     return super.find(name, field).then((setting) => {

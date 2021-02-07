@@ -12,9 +12,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { BinaryCounterScore, BinaryCounterTheme, Counter, CounterType } from 'src/core/entities/counter'
+import { BinaryCounterScore, Counter } from 'src/core/entities/counter'
 import StateCounter from 'components/modals/counter/StateCounter.vue'
-import { IdGenerator } from 'src/utility/encryption'
+import { CounterService } from 'src/core/services/CounterService'
 
 @Component({
   components: { StateCounter }
@@ -23,21 +23,10 @@ export default class CreateCounter extends Vue {
   public prompt = false;
   public counter!: Counter<BinaryCounterScore>;
 
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
 
-    this.counter = new Counter()
-    this.counter.id = new IdGenerator().generate()
-    this.counter.name = ''
-    this.counter.description = ''
-    this.counter.type = CounterType.Binary
-    this.counter.theme = BinaryCounterTheme.Default
-    this.counter.icon = 'label'
-    this.counter.createdAt = new Date()
-    this.counter.enabled = true
-    this.counter.scores = {
-      value: false,
-    }
+    this.counter = this.$container.resolve(CounterService).create() as Counter<BinaryCounterScore>
   }
 }
 </script>

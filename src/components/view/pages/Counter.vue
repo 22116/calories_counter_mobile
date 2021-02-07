@@ -9,15 +9,15 @@ import LimitedCounter from 'components/counters/LimitedCounter.vue'
 import BinaryCounter from 'components/counters/BinaryCounter.vue'
 import GoalCounter from 'components/counters/GoalCounter.vue'
 import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
-import CounterView from 'components/CounterView.vue'
-import { History } from 'src/core/entities'
-import { historySaveEvent } from 'src/core/events/history'
+import CounterView from 'components/view/CounterView.vue'
+import { EventService } from 'src/core/services/EventService'
+import { HistorySaveEvent } from 'src/core/services/events'
 
 @Component({
   components: { CounterView, GoalCounter, BinaryCounter, LimitedCounter }
 })
 export default class PageCounter extends CounterTypeMixin {
-  public counter: Counter<Score> = {}
+  public counter: Partial<Counter<Score>> = {}
 
   constructor() {
     super()
@@ -34,20 +34,20 @@ export default class PageCounter extends CounterTypeMixin {
       return
     }
 
-    let history = (await this.$orm.repository.history.findByDate(new Date(this.$route.params.date),))
-      ?.find((history: History) => history.counter_id === this.$route.params.hash)
+    let history = await this.$orm.repository.history.findByDateAndCounterId(
+      new Date(this.$route.params.date),
+      this.$route.params.hash
+    )
 
-    if (history) {
-      counter.scores = history.scores
-    }
-
-    this.counter = counter
+    this.counter = history ? history.getCounter() : counter
     this.$q.loading.hide()
   }
 
   @Watch('counter', {deep: true})
   async updateCounterData() {
-    await historySaveEvent(this.$orm, new Date(this.$route.params.date), this.counter)
+    await this.$container
+      .resolve(EventService)
+      .dispatch(new HistorySaveEvent(this.counter as Counter<Score>, new Date(this.$route.params.date)))
   }
 }
 </script>

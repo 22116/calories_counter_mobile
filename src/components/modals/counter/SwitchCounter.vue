@@ -41,7 +41,7 @@
 import { Component, Emit, Prop, VModel, Vue, Watch } from 'vue-property-decorator'
 import { Counter, Score } from 'src/core/entities/counter'
 import StateCounter from 'components/modals/counter/StateCounter.vue'
-import { isSucceed } from 'src/core/methods/counter'
+import { CounterService } from 'src/core/services/CounterService'
 
 type Option = {
   value: string,
@@ -65,7 +65,7 @@ export default class SwitchCounter extends Vue {
     this.counterOptions = []
 
     for (const counter of this.counters) {
-      const succeed = isSucceed(counter)
+      const succeed = this.$container.resolve(CounterService).isSucceed(counter)
 
       this.counterOptions.push({
         value: counter.id,

@@ -1,5 +1,6 @@
 import { Vue } from 'vue/types/vue'
 import { CounterRepository, HistoryRepository, SettingRepository } from 'src/core/repositories'
+import { DependencyContainer } from 'tsyringe'
 
 export type ORM = {
   repository: {
@@ -11,13 +12,14 @@ export type ORM = {
 
 declare module 'vue/types/vue' {
   interface VueConstructor<V extends Vue> {
-    $orm: ORM
+    $orm: ORM,
+    $container: DependencyContainer
   }
 }
 
 declare module 'vue-property-decorator' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  class Vue {
-    $orm: ORM
+  interface Vue {
+    $orm: ORM,
+    $container: DependencyContainer
   }
 }

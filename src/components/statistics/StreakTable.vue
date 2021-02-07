@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, VModel, Watch } from 'vue-property-decorator'
+import { Vue, Component, VModel } from 'vue-property-decorator'
 import { formatEnum } from 'src/utility/helper'
 import { CounterType } from 'src/core/entities/counter'
 import { History } from 'src/core/entities'
@@ -45,23 +45,62 @@ export default class StreakTable extends Vue {
   ]
   public data: Array<Option> = []
 
-  @Watch('history', {deep: true, immediate: true})
-  async updateData() {
-    this.data = []
+  constructor() {
+    super()
 
-    for (const row of this.history) {
-      const counters = await this.$orm.repository.history.findDailyCountersByDate(new Date(row.date))
+    this.$q.loading.show()
+  }
 
-      for (const counter of counters) {
-        this.data.push({
-          counter: counter.name,
-          type: formatEnum(CounterType)[counter.type],
-          createdAt: counter.createdAt.toDateString(),
-          streak: 1,
-          daysAgo: 1,
-        })
+  async mounted() {
+    const streaks: Record<string, {
+      maxStreak: number,
+      curStreak: number,
+      prev: History,
+      first: History,
+      date: Date,
+    }> = {}
+    const history = this.history.sort((a, b) => a.date.toDateString() > b.date.toDateString() ? 1 : -1)
+
+    for (const row of history) {
+      if (!streaks[row.counter_id]) {
+        row.date.setDate(row.date.getDate() + 1)
+
+        // @ts-ignore
+        streaks[row.counter_id] = {}
+        streaks[row.counter_id].maxStreak = 1
+        streaks[row.counter_id].curStreak = 1
+        streaks[row.counter_id].prev = row
+        streaks[row.counter_id].first = row
+      } else if (streaks[row.counter_id]?.prev.date.toDateString() === row.date.toDateString()) {
+        streaks[row.counter_id].curStreak++
+      } else {
+        streaks[row.counter_id].curStreak = 1
       }
+
+      if (streaks[row.counter_id].curStreak > streaks[row.counter_id].maxStreak) {
+        streaks[row.counter_id].maxStreak = streaks[row.counter_id].curStreak
+      }
+
+      streaks[row.counter_id].date = row.date
     }
+
+    for (const id in streaks) {
+      const counter = await this.$orm.repository.counter.find(id)
+
+      if (!counter) {
+        continue
+      }
+
+      this.data.push({
+        counter: counter.name,
+        type: formatEnum(CounterType)[counter.type],
+        createdAt: counter.createdAt.toDateString(),
+        streak: streaks[id].maxStreak,
+        daysAgo: (new Date().getTime() - streaks[id].first.date.getTime()) / 1000 / 60 / 60 / 24
+      })
+    }
+
+    this.$q.loading.hide()
   }
 };
 </script>

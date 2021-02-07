@@ -9,18 +9,30 @@ async function addMissedDays(data: { Vue: VueConstructor }) {
   const counters = await data.Vue.$orm.repository.counter.findAll()
 
   for (const counter of counters) {
-    const date = new Date()
-    const history = await data.Vue.$orm.repository.history.findLast(counter)
+    let history = await data.Vue.$orm.repository.history.findLast(counter)
 
-    while (history && history.date.toDateString() !== date.toDateString()) {
-      const history = new History()
+    if (!history) {
+      history = new History()
       history.id = new IdGenerator().generate()
       history.counter_id = counter.id
       history.scores = counter.scores
+      history.date = counter.createdAt
 
       await data.Vue.$orm.repository.history.save(history)
+    }
 
-      date.setDate(date.getDate() + 1)
+    const date = new Date()
+
+    while (history && history.date.getDate() < date.getDate()) {
+      history.date.setDate(history.date.getDate() + 1)
+
+      const day = new History()
+      day.id = new IdGenerator().generate()
+      day.counter_id = counter.id
+      day.scores = counter.scores
+      day.date = history.date
+
+      await data.Vue.$orm.repository.history.save(day)
     }
   }
 }
@@ -30,7 +42,7 @@ async function initializeSettings(data: { Vue: VueConstructor }) {
   const theme = (await data.Vue.$orm.repository.setting.find(SettingName.Theme)).value as null|string
 
   if (dark !== null || dark === 'auto') {
-    Dark.set(dark)
+    Dark.set(dark as boolean|'auto')
   }
 
   if (theme) {

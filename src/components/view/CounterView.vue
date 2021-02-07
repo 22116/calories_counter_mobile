@@ -8,10 +8,10 @@
 
 <script lang='ts'>
 import { Component, Emit, Prop, VModel } from 'vue-property-decorator'
-import GoalCounter from './counters/GoalCounter.vue'
-import BinaryCounter from './counters/BinaryCounter.vue'
-import LimitedCounter from './counters/LimitedCounter.vue'
-import CounterTypeMixin from './mixins/CounterTypeMixin'
+import GoalCounter from '../counters/GoalCounter.vue'
+import BinaryCounter from '../counters/BinaryCounter.vue'
+import LimitedCounter from '../counters/LimitedCounter.vue'
+import CounterTypeMixin from '../mixins/CounterTypeMixin'
 import { Counter } from 'src/core/entities'
 import { Score } from 'src/core/entities/Counter'
 

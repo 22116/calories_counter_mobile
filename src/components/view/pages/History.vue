@@ -1,6 +1,6 @@
 <template>
   <q-page class="justify-evenly">
-    <history-calendar :history='history' :white-list-hashes='whitelist' class="row q-gutter-md q-pa-lg" />
+    <history-calendar v-if='history.length' :history='history' :white-list-hashes='whitelist' class="row q-gutter-md q-pa-lg" />
 
     <div class="row q-gutter-md q-pa-lg">
       <q-badge color="red">Some of the counters are not passed</q-badge>
@@ -36,9 +36,17 @@ export default class PageHistory extends Vue {
   public showList = false
   public whitelist = []
 
+  constructor() {
+    super()
+
+    this.$q.loading.show()
+  }
+
   async mounted() {
     this.history = await this.$orm.repository.history.findAll()
     this.counters = await this.$orm.repository.counter.findAll()
+
+    this.$q.loading.hide()
   }
 };
 </script>

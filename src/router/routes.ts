@@ -7,7 +7,7 @@ const routes: RouteConfig[] = [
     children: [
       { path: '/', redirect: '/history' },
       { path: '/history', component: () => import('components/view/pages/History.vue') },
-      { path: '/counter/:hash/:date', component: () => import('components/view/pages/Counter.vue') },
+      { path: '/counter/:date/:hash', component: () => import('components/view/pages/Counter.vue') },
       { path: '/settings', component: () => import('components/view/pages/Settings.vue') },
       { path: '/statistics', component: () => import('components/view/pages/Statistics.vue') },
     ]

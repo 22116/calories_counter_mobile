@@ -21,6 +21,8 @@
     "apexcharts": "^3.23.1",
     "core-js": "^3.6.5",
     "quasar": "^1.0.0",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.4.0",
     "uuid": "^8.3.2",
     "vue-class-component": "^7.2.2",
     "vue-property-decorator": "^9.1.2",

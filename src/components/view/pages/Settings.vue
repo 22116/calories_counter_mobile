@@ -33,13 +33,13 @@ export default class Settings extends Vue {
   @Watch('dark.value')
   async darkChanged(value: boolean) {
     this.$q.dark.set(value)
-    await this.$orm.repository.setting.save(this.dark)
+    await this.$orm.repository.setting.save(this.dark as Setting)
   }
 
   @Watch('theme.value')
   async themeChanged(value: string) {
     colors.setBrand('primary', value)
-    await this.$orm.repository.setting.save(this.theme)
+    await this.$orm.repository.setting.save(this.theme as Setting)
   }
 };
 </script>

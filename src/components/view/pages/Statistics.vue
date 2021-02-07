@@ -1,6 +1,6 @@
 <template>
   <div>
-    <streak-table v-model='history' />
+    <streak-table v-if='history.length' v-model='history' />
   </div>
 </template>
 

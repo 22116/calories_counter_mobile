@@ -38,10 +38,10 @@ import {
   LimitedCounterScore,
   Score
 } from 'src/core/entities/counter'
-import { setType, getCounterTypeDescription } from 'src/core/methods/counter'
 import { formatEnum } from 'src/utility/helper'
 import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
-import CounterView from 'components/CounterView.vue'
+import CounterView from 'components/view/CounterView.vue'
+import { CounterService } from 'src/core/services/CounterService'
 
 type Option = { label: string, value: number }
 type AdditionalProperties = { current: number, limit: number, start: number }
@@ -96,7 +96,7 @@ export default class Type extends CounterTypeMixin {
   }
 
   getDescription(type: CounterType): string {
-    return getCounterTypeDescription(type)
+    return this.$container.resolve(CounterService).getCounterTypeDescription(type)
   }
 
   @Emit('input')
@@ -117,7 +117,7 @@ export default class Type extends CounterTypeMixin {
 
   @Watch('type')
   onTypeChanged(typeData: {value: CounterType}) {
-    setType(this.counter, typeData.value)
+    this.$container.resolve(CounterService).setType(this.counter, typeData.value)
   }
 
   @Watch('theme')

@@ -13,12 +13,12 @@
 
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
-import { isSucceed } from 'src/core/methods/counter'
 import SwitchCounter from 'components/modals/counter/SwitchCounter.vue'
 import { Counter, Score } from 'src/core/entities/counter'
 import { History } from 'src/core/entities'
 import { date } from 'quasar'
 import formatDate = date.formatDate
+import { CounterService } from 'src/core/services/CounterService'
 
 type Option = {label: string, value: string, description: string, icon: string|null, class: Record<string, boolean>};
 
@@ -36,19 +36,21 @@ export default class HistoryCalendar extends Vue {
   public events: Array<string> = []
   public counters: Array<Counter<Score>> = []
 
-  mounted() {
+  constructor() {
+    super()
+
     this.events = this.history.map((history: History) => formatDate(history.date, this.FORMAT))
   }
 
-  async eventColor(date: string): Promise<string> {
-    const counters = await this.$orm.repository.history.findDailyCountersByDate(new Date(date))
+  eventColor(date: string): string {
+    const history = this.history.filter((history) => formatDate(history.date, this.FORMAT) === date)
 
-    for (const counter of counters) {
-      if (!this.whiteListHashes.includes(counter.id)) {
+    for (const day of history) {
+      if (!this.whiteListHashes.includes(day.getCounter().id)) {
         continue
       }
 
-      if (!isSucceed(counter)) {
+      if (!this.$container.resolve(CounterService).isSucceed(day.getCounter())) {
         return 'red'
       }
     }
@@ -57,22 +59,24 @@ export default class HistoryCalendar extends Vue {
   }
 
   @Watch('date')
-  async dateChanged(date: string|null) {
+  dateChanged(date: string|null) {
     if (!date) {
       return
     }
 
-    const concrete = new Date(date).toDateString()
-    const today = new Date().toDateString()
+    const concrete = new Date(date).toISOString()
+    const today = new Date().toISOString()
 
-    if (concrete !== today && this.history.find((row) => row.date.toDateString() === concrete)) {
-      this.counters = await this.$orm.repository.history.findDailyCountersByDate(new Date(date))
+    if (concrete !== today && this.history.find((row) => row.date.toISOString() === concrete)) {
+      this.counters = this.history
+        .filter((history) => formatDate(history.date, this.FORMAT) === date)
+        .map((day) => day.getCounter())
       this.prompt = true
     }
   }
 
   public async switchCounter(hash: string) {
-    await this.$router.push(`/counter/${hash}/${new Date(this.date).toDateString()}`)
+    await this.$router.push(`/counter/${new Date(this.date).toISOString()}/${hash}`)
   }
 };
 </script>

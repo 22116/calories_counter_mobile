@@ -1,5 +1,4 @@
-import { column, ColumnType, database, reference, Table } from 'websql-orm'
-import { History } from 'src/core/entities/History'
+import { column, ColumnType, database, Table } from 'websql-orm'
 import { DB_NAME } from 'src/core/constants'
 
 @database(DB_NAME, 'counters')
@@ -13,8 +12,6 @@ export class Counter<T extends Score> extends Table {
   @column(ColumnType.NUMBER) theme!: number
   @column(ColumnType.ANY) scores!: T
   @column(ColumnType.BOOLEAN) enabled!: boolean
-
-  @reference('id', new History(), 'counter_id') history!: Array<History>;
 }
 
 export type Score = BinaryCounterScore|GoalCounterScore|LimitedCounterScore
