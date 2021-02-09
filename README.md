@@ -2,6 +2,8 @@
 
 Application for counter creation. These counters reset each day
 
+Android: https://play.google.com/store/apps/details?id=lsbproject.counter.app
+
 ## Install the dependencies
 ```bash
 npm install

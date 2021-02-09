@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.lsbproject.counter" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="lsbproject.counter.app" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Daily Counter</name>
-    <description>Application to count something for a daily basis or something else</description>
+    <description>Application to count something for a daily basis</description>
     <author email="fedorenko22116@gmail.com">
         Victor Fedorenko
     </author>
@@ -74,4 +74,5 @@
     <allow-navigation href="about:*" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="Orientation" value="portrait" />
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
 </widget>

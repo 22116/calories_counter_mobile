@@ -1,6 +1,6 @@
 <template>
   <div>
-    <streak-table v-if='history.length' v-model='history' />
+    <streak-table v-if='loaded' v-model='history' />
   </div>
 </template>
 
@@ -14,9 +14,11 @@ import { History } from 'src/core/entities'
 })
 export default class Statistics extends Vue {
   public history: Array<History> = []
+  public loaded = false
 
   async mounted() {
     this.history = await this.$orm.repository.history.findAll()
+    this.loaded = true
   }
 }
 </script>

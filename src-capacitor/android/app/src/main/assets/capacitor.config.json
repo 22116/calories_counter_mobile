@@ -1,7 +1,0 @@
-{
-  "appId": "lsbproject.counter.app",
-  "appName": "DCounter",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www"
-}
