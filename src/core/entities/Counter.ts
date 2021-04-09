@@ -12,6 +12,20 @@ export class Counter<T extends Score> extends Table {
   @column(ColumnType.NUMBER) theme!: number
   @column(ColumnType.ANY) scores!: T
   @column(ColumnType.BOOLEAN) enabled!: boolean
+  @column(ColumnType.ANY) timeouts: Array<TimeoutList> = [TimeoutList.Daily]
+}
+
+export enum TimeoutList {
+  Monday = 'monday',
+  Tuesday = 'tuesday',
+  Wednesday = 'wednesday',
+  Thursday = 'thursday',
+  Friday = 'friday',
+  Saturday = 'saturday',
+  Sunday = 'saturday',
+  Daily = 'daily',
+  Monthly = 'monthly',
+  Yearly = 'yearly',
 }
 
 export type Score = BinaryCounterScore|GoalCounterScore|LimitedCounterScore

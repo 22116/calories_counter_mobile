@@ -1,6 +1,6 @@
 <template>
-  <q-page class="justify-evenly">
-    <history-calendar v-if='loaded' :history='history' :white-list-hashes='whitelist' class="row q-gutter-md q-pa-lg" />
+  <q-page v-if='loaded' class="justify-evenly">
+    <history-calendar id='calendar' :history='history' :white-list-hashes='whitelist' class="row q-gutter-md q-pa-lg" />
 
     <div class="row q-gutter-md q-pa-lg">
       <q-badge color="red">Some of the counters are not passed</q-badge>
@@ -12,11 +12,11 @@
       switch to the date where you already have registered counter.
     </div>
 
-    <q-page-sticky position="top-right" :offset="[5, 25]">
+    <q-page-sticky v-if='history.length' position="top-right" :offset="[5, 5]">
       <q-btn fab icon="more_vert" color="primary" @click='() => showList = !showList' />
     </q-page-sticky>
 
-    <whitelist v-if='counters.length' v-model='showList' :counters='counters' @update='(hashes) => this.whitelist = hashes' />
+    <whitelist v-model='showList' :counters='counters' @update='(hashes) => this.whitelist = hashes' />
   </q-page>
 </template>
 
@@ -57,4 +57,7 @@ export default class PageHistory extends Vue {
 <style lang='sass'>
 .q-date__header
   display: none
+
+#calendar
+  margin-top: 0 !important
 </style>

@@ -21,14 +21,17 @@
     <div class="col-12 q-mt-xl">
       <div class='row'>
         <add-button class="col flex" :class='{"justify-end": !completed, "justify-center": completed }' label="Back" @success="back" />
-        <add-button v-if="!completed" class="col flex justify-start q-mx-md" label="Forward" @success="forward" />
-        <div v-if="!completed" class='col-12 row q-mt-md justify-center'>
-          <q-btn class='col-auto q-ma-sm' label="+1" size="xl" color="primary" @click="forward(1)" />
-          <q-btn class='col-auto q-ma-sm' label="+5" size="xl" color="primary" @click="forward(5)" />
-          <q-btn class='col-auto q-ma-sm' label="+10" size="xl" color="primary" @click="forward(10)" />
-          <q-btn class='col-auto q-ma-sm' label="+25" size="xl" color="primary" @click="forward(25)" />
-          <q-btn class='col-auto q-ma-sm' label="+50" size="xl" color="primary" @click="forward(50)" />
-          <q-btn class='col-auto q-ma-sm' label="+100" size="xl" color="primary" @click="forward(100)" />
+        <add-button v-if="!completed" class="col flex justify-center q-mx-md" label="Add" @success="forward" />
+        <div v-if="!completed" class='col'>
+          <q-fab class='full-height' square color="primary" icon="keyboard_arrow_up" direction="up">
+            <q-fab-action
+              v-for='(option, index) in plusOptions'
+              :key='index'
+              :color="index % 2 ? 'primary' : 'secondary'"
+              @click="forward(option)"
+              :label="'+' + option"
+            />
+          </q-fab>
         </div>
       </div>
     </div>
@@ -49,6 +52,7 @@ export default class GoalCounter extends Vue {
   @PropSync('counter', { type: Object, required: true })
   public counterSync!: Counter<GoalCounterScore>
   public completed = false
+  public plusOptions = [1, 5, 10, 25, 50, 100, 250, 500]
 
   mounted() {
     this.completed = this.counterSync.scores.current === 0

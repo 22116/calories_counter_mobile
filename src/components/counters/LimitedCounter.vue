@@ -18,14 +18,17 @@
     <div class="col-12 q-mt-xl">
       <div class='row'>
         <add-button class="col flex justify-end" :label="'Add'" @success="add" />
-        <confirm class="col flex justify-start q-mx-md" :label="'Reset'" :question="'Are you sure you want to reset?'" @success="reset" />
-        <div class='col-12 row q-mt-md justify-center'>
-          <q-btn class='col-auto q-ma-sm' label="+1" size="xl" color="primary" @click="add(1)" />
-          <q-btn class='col-auto q-ma-sm' label="+5" size="xl" color="primary" @click="add(5)" />
-          <q-btn class='col-auto q-ma-sm' label="+10" size="xl" color="primary" @click="add(10)" />
-          <q-btn class='col-auto q-ma-sm' label="+25" size="xl" color="primary" @click="add(25)" />
-          <q-btn class='col-auto q-ma-sm' label="+50" size="xl" color="primary" @click="add(50)" />
-          <q-btn class='col-auto q-ma-sm' label="+100" size="xl" color="primary" @click="add(100)" />
+        <confirm class="col flex justify-center q-mx-md" :label="'Reset'" :question="'Are you sure you want to reset?'" @success="reset" />
+        <div class='col'>
+          <q-fab class='full-height' square color="primary" icon="keyboard_arrow_up" direction="up">
+            <q-fab-action
+              v-for='(option, index) in plusOptions'
+              :key='index'
+              :color="index % 2 ? 'primary' : 'secondary'"
+              @click="add(option)"
+              :label="'+' + option"
+            />
+          </q-fab>
         </div>
       </div>
     </div>
@@ -44,7 +47,8 @@ import { LimitedCounterScore } from 'src/core/entities/Counter'
 })
 export default class LimitedCounter extends Vue {
   @PropSync('counter', { type: Object, required: true })
-  public counterSync!: Counter<LimitedCounterScore>;
+  public counterSync!: Counter<LimitedCounterScore>
+  public plusOptions = [1, 5, 10, 25, 50, 100, 250, 500]
 
   @Emit('update:counter')
   add(current: number) {

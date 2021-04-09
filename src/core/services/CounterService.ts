@@ -1,10 +1,40 @@
-import { singleton } from 'tsyringe'
+import { inject, singleton } from 'tsyringe'
 import { Counter } from 'src/core/entities'
-import { BinaryCounterTheme, CounterType, Score } from 'src/core/entities/Counter'
+import { BinaryCounterTheme, CounterType, Score, TimeoutList } from 'src/core/entities/Counter'
 import { IdGenerator } from 'src/utility/encryption'
 
 @singleton()
+class Scheduler {
+  public match(timeouts: Array<TimeoutList>, list: Array<TimeoutList>): boolean {
+    return timeouts.reduce<boolean>(((previousValue, currentValue) => {
+      return !(!previousValue || !list.includes(currentValue))
+    }), true)
+  }
+
+  public isDue(timeouts: Array<TimeoutList>, date: Date): boolean {
+    for (const timeout of timeouts) {
+      switch (timeout) {
+        case TimeoutList.Daily: return true
+        case TimeoutList.Monthly: if (date.getDate() === 1) return true; else break
+        case TimeoutList.Yearly: if (date.getMonth() === 1 && date.getDate() === 1) return true; else break
+        case TimeoutList.Sunday: if (date.getDay() === 0) return true; else break
+        case TimeoutList.Monday: if (date.getDay() === 1) return true; else break
+        case TimeoutList.Tuesday: if (date.getDay() === 2) return true; else break
+        case TimeoutList.Wednesday: if (date.getDay() === 3) return true; else break
+        case TimeoutList.Thursday: if (date.getDay() === 4) return true; else break
+        case TimeoutList.Friday: if (date.getDay() === 5) return true; else break
+        case TimeoutList.Saturday: if (date.getDay() === 6) return true; else break
+      }
+    }
+
+    return false
+  }
+}
+
+@singleton()
 export class CounterService {
+  constructor(@inject(Scheduler) private scheduler: Scheduler) { }
+
   create(): Counter<Score> {
     const counter = new Counter()
     counter.id = new IdGenerator().generate()
@@ -71,14 +101,14 @@ export class CounterService {
 
   getCounterTypeDescription(type: CounterType): string {
     switch (type) {
-      case CounterType.Binary:
-        return 'Just a button. Yes/No'
-      case CounterType.Limited:
-        return 'Make a restriction which you cannot break'
-      case CounterType.Goal:
-        return 'Count how many steps left to pass your goal'
+      case CounterType.Binary: return 'Just a button. Yes/No'
+      case CounterType.Limited: return 'Make a restriction which you cannot break'
+      case CounterType.Goal: return 'Count how many steps left to pass your goal'
+      default: return ''
     }
+  }
 
-    return ''
+  isDue(counter: Counter<Score>, date: Date): boolean {
+    return this.scheduler.isDue(counter.timeouts, date)
   }
 }

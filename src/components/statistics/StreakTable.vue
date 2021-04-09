@@ -78,7 +78,6 @@ export default class StreakTable extends Vue {
       ) {
         streaks[row.counter_id].curStreak++
       } else {
-        streaks[row.counter_id].maxStreak = 1
         streaks[row.counter_id].curStreak = 1
         streaks[row.counter_id].prev = row
         streaks[row.counter_id].first = row
@@ -92,8 +91,6 @@ export default class StreakTable extends Vue {
 
       row.date.setDate(row.date.getDate() + 1)
     }
-
-    console.log(streaks)
 
     for (const id in streaks) {
       const counter = await this.$orm.repository.counter.find(id)

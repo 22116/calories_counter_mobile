@@ -20,8 +20,6 @@ import { date } from 'quasar'
 import formatDate = date.formatDate
 import { CounterService } from 'src/core/services/CounterService'
 
-type Option = {label: string, value: string, description: string, icon: string|null, class: Record<string, boolean>};
-
 @Component({
   components: { SwitchCounter },
 })
