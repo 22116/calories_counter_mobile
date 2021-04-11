@@ -24,4 +24,10 @@ export class EventService {
       }
     }
   }
+
+  async dispatchAll(...events: Array<Event>) {
+    for (const event of events) {
+      await this.dispatch(event)
+    }
+  }
 }

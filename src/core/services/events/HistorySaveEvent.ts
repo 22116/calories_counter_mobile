@@ -4,6 +4,7 @@ import { Score } from 'src/core/entities/Counter'
 import { HistoryRepository } from 'src/core/repositories'
 import { inject, injectable } from 'tsyringe'
 import { EventHandler, Event } from 'src/core/services/events/models'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
 
 export class HistorySaveEvent implements Event {
   constructor(public counter: Counter<Score>, public date: Date) {}
@@ -13,18 +14,15 @@ export class HistorySaveEvent implements Event {
 export class HistorySaveEventHandler implements EventHandler {
   constructor(
     @inject(HistoryService) private historyService: HistoryService,
-    @inject(HistoryRepository) private historyRepository: HistoryRepository
+    @inject(HistoryRepository) private historyRepository: HistoryRepository,
   ) { }
 
   async handle(event: HistorySaveEvent) {
-    const history = await this.historyRepository.findByDateAndCounterId(event.date, event.counter.id)
+    const oldHistory = await this.historyRepository.findByDateAndCounterId(event.date, event.counter.id)
+    const newHistory = await this.historyService.save(event.counter, event.date)
 
-    if (history !== null) {
-      history.scores = event.counter.scores
-
-      await this.historyRepository.update(history)
-    } else {
-      await this.historyRepository.save(this.historyService.create(event.counter))
+    if (JSON.stringify(oldHistory?.getCounter().scores) !== JSON.stringify(newHistory.getCounter().scores)) {
+      void this.historyRepository.setProxy(new InMemory()).clear().findAll()
     }
   }
 

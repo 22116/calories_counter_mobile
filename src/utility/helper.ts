@@ -1,8 +1,3 @@
-export function clone<T>(data: T): T {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return JSON.parse(JSON.stringify(data))
-}
-
 export function dateFormat(x: Date, y: string): string {
   const z = {
     M: x.getMonth() + 1,
@@ -36,4 +31,8 @@ export function formatEnum(e: Object): Array<string> {
   })
 
   return object
+}
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

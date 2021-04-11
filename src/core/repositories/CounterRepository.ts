@@ -1,4 +1,4 @@
-import { Repository } from 'src/core/repositories/Repository'
+import { Repository } from 'src/utility/database/Repository'
 import { Counter, Score } from 'src/core/entities/Counter'
 import { singleton } from 'tsyringe'
 

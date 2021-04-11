@@ -1,4 +1,4 @@
-import { Repository } from 'src/core/repositories/Repository'
+import { Repository } from 'src/utility/database/Repository'
 import { Setting, SettingName } from 'src/core/entities/Setting'
 import { singleton } from 'tsyringe'
 

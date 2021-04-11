@@ -7,7 +7,7 @@ export default class Filesystem {
     return new Promise<string>((resolve, reject) => {
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fs: FileSystem) => {
         console.log('file system open: ' + fs.name)
-        fs.root.getFile('cache.txt', { create: true, exclusive: false }, (fileEntry) => {
+        fs.root.getFile('proxy.txt', { create: true, exclusive: false }, (fileEntry) => {
           console.log('fileEntry is file?', fileEntry)
 
           resolve(this.readFile(fileEntry))
@@ -20,7 +20,7 @@ export default class Filesystem {
     return new Promise<void>((resolve, reject) => {
       window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, (fs: FileSystem) => {
         console.log('file system open: ' + fs.name)
-        fs.root.getFile('cache.txt', { create: true, exclusive: false }, (fileEntry) => {
+        fs.root.getFile('proxy.txt', { create: true, exclusive: false }, (fileEntry) => {
           console.log('fileEntry is file?', fileEntry)
 
           resolve(this.writeFile(fileEntry, data))

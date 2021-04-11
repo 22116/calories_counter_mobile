@@ -93,7 +93,12 @@ import { Counter, Score } from 'src/core/entities/counter'
 import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
 import links from './links'
 import { EventService } from 'src/core/services/EventService'
-import { CounterCreatedEvent, CounterDeletedEvent, CounterUpdatedEvent } from 'src/core/services/events'
+import {
+  CounterCreatedEvent,
+  CounterDeletedEvent,
+  CounterUpdatedEvent,
+  HistorySaveEvent
+} from 'src/core/services/events'
 import { CounterService } from 'src/core/services/CounterService'
 
 @Component({
@@ -143,7 +148,7 @@ export default class MainLayout extends Vue {
   async onCounterEdited(counter: Counter<Score>) {
     await this.$container
       .resolve(EventService)
-      .dispatch(new CounterUpdatedEvent(counter))
+      .dispatchAll(new CounterUpdatedEvent(counter), new HistorySaveEvent(counter, new Date()))
       .then(() => this.loadUserCounters())
       .then(() => this.counter = null)
       .then(() => this.$router.push('/').catch(() => console.log('Already on /history')))

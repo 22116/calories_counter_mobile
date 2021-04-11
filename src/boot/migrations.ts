@@ -43,7 +43,11 @@ export default boot(async ({ Vue }) => {
   const version = await settingsRepository.find(SettingName.Version)
 
   if (version.value < 2) {
-    await sqlite.fromSqlByJs(DB_NAME, 'ALTER TABLE counters ADD COLUMN timeouts DEFAULT :data', [[TimeoutList.Daily]])
+    await sqlite.fromSqlByJs(
+      DB_NAME,
+      `ALTER TABLE counters ADD COLUMN timeouts TEXT DEFAULT '${JSON.stringify([TimeoutList.Daily])}'`,
+      []
+    )
   }
 
   version.value = VERSION

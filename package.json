@@ -1,6 +1,6 @@
 {
   "name": "daily-counter-android",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Application to count something for a daily basis",
   "productName": "DCounter",
   "author": "victor.fedorenko <victor.fedorenko@mgid.com>",
@@ -22,8 +22,10 @@
     "cordova-plugin-file": "^6.0.2",
     "cordova-sqlite-storage": "^5.1.0",
     "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
     "quasar": "^1.0.0",
     "reflect-metadata": "^0.1.13",
+    "set-interval-async": "^2.0.1",
     "tsyringe": "^4.4.0",
     "uuid": "^8.3.2",
     "vue-class-component": "^7.2.2",
@@ -33,7 +35,9 @@
   "devDependencies": {
     "@quasar/app": "^2.0.0",
     "@types/cordova-sqlite-storage": "^1.5.4",
+    "@types/lodash": "^4.14.168",
     "@types/node": "^10.17.15",
+    "@types/set-interval-async": "^1.0.0",
     "@types/uuid": "^8.3.0",
     "@types/websql": "0.0.27",
     "@typescript-eslint/eslint-plugin": "^3.3.0",

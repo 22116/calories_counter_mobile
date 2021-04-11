@@ -6,13 +6,14 @@
       :event-color="eventColor"
       class="full-width"
       id="calendar"
+      @navigation='navigation'
     />
     <switch-counter v-model='prompt' :counters='counters' @picked='switchCounter' />
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
+import { Vue, Component, Watch, Prop, Emit } from 'vue-property-decorator'
 import SwitchCounter from 'components/modals/counter/SwitchCounter.vue'
 import { Counter, Score } from 'src/core/entities/counter'
 import { History } from 'src/core/entities'
@@ -34,12 +35,6 @@ export default class HistoryCalendar extends Vue {
   public events: Array<string> = []
   public counters: Array<Counter<Score>> = []
 
-  constructor() {
-    super()
-
-    this.events = this.history.map((history: History) => formatDate(history.date, this.FORMAT))
-  }
-
   eventColor(date: string): string {
     const history = this.history.filter((history) => formatDate(history.date, this.FORMAT) === date)
 
@@ -54,6 +49,18 @@ export default class HistoryCalendar extends Vue {
     }
 
     return 'green'
+  }
+
+  @Emit('navigation')
+  navigation<T extends { year: number, month: number }>(view: T): T{
+    view.month -= 1
+
+    return view
+  }
+
+  @Watch('history', {immediate: true, deep: true})
+  historyChanged() {
+    this.events = this.history.map((history: History) => formatDate(history.date, this.FORMAT))
   }
 
   @Watch('date')

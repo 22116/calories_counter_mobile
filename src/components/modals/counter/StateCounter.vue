@@ -44,7 +44,7 @@ import Generic from 'components/modals/counter/decorators/Generic.vue'
 import Type from 'components/modals/counter/decorators/Type.vue'
 import { Counter, Score } from 'src/core/entities/counter'
 import CounterView from 'components/view/CounterView.vue'
-import { clone } from 'src/utility/helper'
+import { cloneDeep } from 'lodash'
 
 @Component({
   components: { CounterView, Type, Generic }
@@ -60,7 +60,7 @@ export default class StateCounter extends Vue {
 
   @Watch('counter', {deep: true, immediate: true})
   onCounterChanged(counter: Counter<Score>) {
-    this.counterPreview = clone(counter)
+    this.counterPreview = cloneDeep(counter)
     this.counterPreviewKey++
   }
 

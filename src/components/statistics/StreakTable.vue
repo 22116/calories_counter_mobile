@@ -21,11 +21,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, VModel } from 'vue-property-decorator'
+import { Vue, Component, VModel,  } from 'vue-property-decorator'
 import { formatEnum } from 'src/utility/helper'
 import { CounterType } from 'src/core/entities/counter'
 import { History } from 'src/core/entities'
 import { CounterService } from 'src/core/services/CounterService'
+import { cloneDeep } from 'lodash'
 
 type Option = {
   counter: string,
@@ -60,7 +61,7 @@ export default class StreakTable extends Vue {
       prev: History,
       first: History,
     }> = {}
-    const history = this.history.sort((a, b) => a.date.getTime() > b.date.getTime() ? 1 : -1)
+    const history = cloneDeep(this.history).sort((a, b) => a.date.getTime() > b.date.getTime() ? 1 : -1)
 
     for (const row of history) {
       if (!streaks[row.counter_id]) {
@@ -73,8 +74,8 @@ export default class StreakTable extends Vue {
       }
 
       if (
-        streaks[row.counter_id]?.prev.date.toISOString() === row.date.toISOString()
-        && this.$container.resolve(CounterService).isSucceed(row.getCounter())
+        streaks[row.counter_id]?.prev.date.toISOString() === row.date.toISOString() &&
+        this.$container.resolve(CounterService).isSucceed(row.getCounter())
       ) {
         streaks[row.counter_id].curStreak++
       } else {

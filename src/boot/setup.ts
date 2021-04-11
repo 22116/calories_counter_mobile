@@ -9,6 +9,10 @@ async function addMissedDays(data: { Vue: VueConstructor }) {
   const counters = await data.Vue.$orm.repository.counter.findAll()
 
   for (const counter of counters) {
+    if (!counter.enabled) {
+      continue
+    }
+
     let history = await data.Vue.$orm.repository.history.findLast(counter)
 
     if (!history) {

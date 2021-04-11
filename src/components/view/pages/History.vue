@@ -1,6 +1,12 @@
 <template>
   <q-page v-if='loaded' class="justify-evenly">
-    <history-calendar id='calendar' :history='history' :white-list-hashes='whitelist' class="row q-gutter-md q-pa-lg" />
+    <history-calendar
+      id='calendar'
+      :history='history'
+      :white-list-hashes='whitelist'
+      class="row q-gutter-md q-pa-lg"
+      @navigation='fetchMonth'
+    />
 
     <div class="row q-gutter-md q-pa-lg">
       <q-badge color="red">Some of the counters are not passed</q-badge>
@@ -26,6 +32,7 @@ import HistoryCalendar from 'components/statistics/HistoryCalendar.vue'
 import Whitelist from 'components/modals/counter/Whitelist.vue'
 import { Counter, History } from 'src/core/entities'
 import { Score } from 'src/core/entities/Counter'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
 
 @Component({
   components: { Whitelist, HistoryCalendar },
@@ -43,13 +50,34 @@ export default class PageHistory extends Vue {
     this.$q.loading.show()
   }
 
+  beforeDestroy() {
+    this.$orm.repository.history
+      .setProxy(new InMemory(PageHistory.dateToKey(new Date())))
+      .clear()
+  }
+
   async mounted() {
-    this.history = await this.$orm.repository.history.findAll()
+    this.history = await this.$orm.repository.history
+      .setProxy(new InMemory(PageHistory.dateToKey(new Date())))
+      .findByMonth(new Date())
     this.counters = await this.$orm.repository.counter.findAll()
 
     this.loaded = true
 
     this.$q.loading.hide()
+  }
+
+  async fetchMonth(date: { year: number, month: number }) {
+    this.history = await this.$orm.repository.history
+      .setProxy(new InMemory(JSON.stringify(date)))
+      .findByMonth(new Date(date.year, date.month))
+  }
+
+  private static dateToKey(date: Date): string {
+    return JSON.stringify({
+      year: date.getFullYear(),
+      month: date.getMonth(),
+    })
   }
 };
 </script>

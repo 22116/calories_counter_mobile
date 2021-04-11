@@ -1,25 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-assignment */
 import { sqlite, Table } from 'websql-orm'
+import { EmptyProxy, Proxy } from './proxy/Proxy'
+import { cloneDeep } from 'lodash'
 
 export abstract class Repository<T extends Table> {
+  protected proxy: Proxy = new EmptyProxy()
+
   find(id: string, field = 'id'): Promise<T|null> {
     const params: Record<string, any> = {}
 
     params[field] = id
 
-    return sqlite.queryFirst(this.factory(), params)
+    return this.proxy.handle(sqlite.queryFirst(this.factory(), params))
   }
 
   findBy(params: Record<string, any>): Promise<T[]> {
-    return sqlite.query(this.factory(), params)
+    return this.proxy.handle(sqlite.query(this.factory(), params))
   }
 
   findOneBy(params: Record<string, any>): Promise<T|null> {
-    return sqlite.queryFirst(this.factory(), params)
+    return this.proxy.handle(sqlite.queryFirst(this.factory(), params))
   }
 
   findAll(): Promise<Array<T>> {
-    return sqlite.query(this.factory(), [])
+    return this.proxy.handle(sqlite.query(this.factory(), []))
   }
 
   remove(id: string): Promise<boolean> {
@@ -32,6 +36,26 @@ export abstract class Repository<T extends Table> {
 
   update(object: T): Promise<number> {
     return sqlite.update(object)
+  }
+
+  clear(): this {
+    this.proxy.clear()
+
+    return this
+  }
+
+  clearScope(): this {
+    this.proxy.clearScope()
+
+    return this
+  }
+
+  setProxy(proxy: Proxy): this {
+    const copy = cloneDeep(this)
+    copy.proxy = proxy
+    copy.proxy.setRepository(copy)
+
+    return copy
   }
 
   abstract factory(): T;

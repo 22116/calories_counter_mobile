@@ -14,16 +14,16 @@ class Scheduler {
   public isDue(timeouts: Array<TimeoutList>, date: Date): boolean {
     for (const timeout of timeouts) {
       switch (timeout) {
-        case TimeoutList.Daily: return true
-        case TimeoutList.Monthly: if (date.getDate() === 1) return true; else break
-        case TimeoutList.Yearly: if (date.getMonth() === 1 && date.getDate() === 1) return true; else break
-        case TimeoutList.Sunday: if (date.getDay() === 0) return true; else break
-        case TimeoutList.Monday: if (date.getDay() === 1) return true; else break
-        case TimeoutList.Tuesday: if (date.getDay() === 2) return true; else break
+        case TimeoutList.Daily:     return true
+        case TimeoutList.Monthly:   if (date.getDate() === 1) return true; else break
+        case TimeoutList.Yearly:    if (date.getMonth() === 1 && date.getDate() === 1) return true; else break
+        case TimeoutList.Sunday:    if (date.getDay() === 0) return true; else break
+        case TimeoutList.Monday:    if (date.getDay() === 1) return true; else break
+        case TimeoutList.Tuesday:   if (date.getDay() === 2) return true; else break
         case TimeoutList.Wednesday: if (date.getDay() === 3) return true; else break
-        case TimeoutList.Thursday: if (date.getDay() === 4) return true; else break
-        case TimeoutList.Friday: if (date.getDay() === 5) return true; else break
-        case TimeoutList.Saturday: if (date.getDay() === 6) return true; else break
+        case TimeoutList.Thursday:  if (date.getDay() === 4) return true; else break
+        case TimeoutList.Friday:    if (date.getDay() === 5) return true; else break
+        case TimeoutList.Saturday:  if (date.getDay() === 6) return true; else break
       }
     }
 
