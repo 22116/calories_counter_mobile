@@ -15,6 +15,12 @@
           <type v-model='counter' @input='onCounterChanged' />
         </q-carousel-slide>
         <q-carousel-slide :name="2">
+          <q-card-section>
+            <div class="text-h6">When to reset</div>
+          </q-card-section>
+          <q-option-group v-model="counter.timeouts" :options="timeoutOptions" type="checkbox" />
+        </q-carousel-slide>
+        <q-carousel-slide :name="3">
           <q-card-section class='overflow-hidden-x'>
             <q-card-section>
               <div class="text-h6">Counter preview</div>
@@ -32,7 +38,7 @@
       <q-card-actions align="right" class="text-primary">
         <q-btn v-if='sliderIndex > 0' flat label="Previous" @click='sliderIndex--' />
         <q-btn flat label="Cancel" @click="$emit('cancel')" v-close-popup />
-        <q-btn flat :label="sliderIndex === 2 ? 'Confirm' : 'Next'" @click="onButtonClicked" />
+        <q-btn flat :label="sliderIndex === 3 ? 'Confirm' : 'Next'" @click="onButtonClicked" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -42,7 +48,7 @@
 import { Component, Prop, PropSync, VModel, Vue, Watch } from 'vue-property-decorator'
 import Generic from 'components/modals/counter/decorators/Generic.vue'
 import Type from 'components/modals/counter/decorators/Type.vue'
-import { Counter, Score } from 'src/core/entities/counter'
+import { Counter, Score, TimeoutList } from 'src/core/entities/counter'
 import CounterView from 'components/view/CounterView.vue'
 import { cloneDeep } from 'lodash'
 
@@ -58,6 +64,21 @@ export default class StateCounter extends Vue {
   public counterPreview = {}
   public counterPreviewKey = 0
 
+  get timeoutOptions(): Array<any> {
+    const options = []
+
+    for (const value in TimeoutList) {
+      options.push(value)
+    }
+
+    return options.map((timeout) => {
+      return {
+        label: timeout,
+        value: timeout.toLowerCase()
+      }
+    })
+  }
+
   @Watch('counter', {deep: true, immediate: true})
   onCounterChanged(counter: Counter<Score>) {
     this.counterPreview = cloneDeep(counter)
@@ -65,7 +86,7 @@ export default class StateCounter extends Vue {
   }
 
   onButtonClicked() {
-    if (this.sliderIndex === 2) {
+    if (this.sliderIndex === 3) {
       this.prompt = false
       this.$emit('success', this.counter)
       this.sliderIndex = 0

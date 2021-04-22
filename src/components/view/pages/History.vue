@@ -50,17 +50,14 @@ export default class PageHistory extends Vue {
     this.$q.loading.show()
   }
 
-  beforeDestroy() {
-    this.$orm.repository.history
-      .setProxy(new InMemory(PageHistory.dateToKey(new Date())))
-      .clear()
-  }
-
   async mounted() {
     this.history = await this.$orm.repository.history
       .setProxy(new InMemory(PageHistory.dateToKey(new Date())))
+      .clear()
       .findByMonth(new Date())
-    this.counters = await this.$orm.repository.counter.findAll()
+    this.counters = await this.$orm.repository.counter
+      .setProxy(new InMemory())
+      .findAll()
 
     this.loaded = true
 

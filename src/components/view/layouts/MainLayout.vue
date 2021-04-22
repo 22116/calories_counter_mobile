@@ -177,7 +177,7 @@ export default class MainLayout extends Vue {
   }
 
   async createCounterLink(counter: Counter<Score>, date: Date) {
-    const history = await this.$orm.repository.history.findByDateAndCounterId(date, counter.id)
+    const history = await this.$orm.repository.history.findByDateAndCounter(date, counter)
     const succeed = this.$container.resolve(CounterService).isSucceed(history ? history.getCounter() : counter)
 
     return {

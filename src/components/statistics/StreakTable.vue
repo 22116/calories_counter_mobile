@@ -43,8 +43,8 @@ export default class StreakTable extends Vue {
     { name: 'Counter', align: 'left', label: 'Counter', field: 'counter', sortable: true },
     { name: 'Type', align: 'center', label: 'Type', field: 'type', sortable: true },
     { name: 'Created Date', align: 'center', label: 'Created Date', field: 'createdAt', sortable: true },
-    { name: 'MaxStreak', align: 'center', label: 'MaxStreak', field: 'maxStreak', sortable: true },
-    { name: 'CurStreak', align: 'center', label: 'CurStreak', field: 'curStreak', sortable: true },
+    { name: 'MaxStreak', align: 'center', label: 'Maximum Streak', field: 'maxStreak', sortable: true },
+    { name: 'CurStreak', align: 'center', label: 'Current Streak', field: 'curStreak', sortable: true },
   ]
   public data: Array<Option> = []
 

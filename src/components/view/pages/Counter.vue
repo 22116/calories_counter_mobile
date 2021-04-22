@@ -34,9 +34,9 @@ export default class PageCounter extends CounterTypeMixin {
       return
     }
 
-    let history = await this.$orm.repository.history.findByDateAndCounterId(
+    let history = await this.$orm.repository.history.findByDateAndCounter(
       new Date(this.$route.params.date),
-      this.$route.params.hash
+      counter
     )
 
     this.counter = history ? history.getCounter() : counter

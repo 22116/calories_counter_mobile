@@ -18,10 +18,10 @@ export class HistorySaveEventHandler implements EventHandler {
   ) { }
 
   async handle(event: HistorySaveEvent) {
-    const oldHistory = await this.historyRepository.findByDateAndCounterId(event.date, event.counter.id)
+    const oldHistory = await this.historyRepository.findByDateAndCounter(event.date, event.counter)
     const newHistory = await this.historyService.save(event.counter, event.date)
 
-    if (JSON.stringify(oldHistory?.getCounter().scores) !== JSON.stringify(newHistory.getCounter().scores)) {
+    if (JSON.stringify(oldHistory?.getCounter().scores) !== JSON.stringify(newHistory?.getCounter().scores)) {
       void this.historyRepository.setProxy(new InMemory()).clear().findAll()
     }
   }

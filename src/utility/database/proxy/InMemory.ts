@@ -10,7 +10,9 @@ export class InMemory<T extends Table> implements Proxy {
 
   private repository!: Repository<T>
 
-  public constructor(private key = 'main') { }
+  public constructor(private key = 'main') {
+
+  }
 
   setRepository(repository: Repository<T>): this {
     this.repository = repository
@@ -19,7 +21,9 @@ export class InMemory<T extends Table> implements Proxy {
   }
 
   clear(): this {
-    delete InMemory.cache[this.repository.constructor.name][this.key]
+    if (InMemory.cache[this.repository.constructor.name]?.[this.key]) {
+      delete InMemory.cache[this.repository.constructor.name][this.key]
+    }
 
     return this
   }

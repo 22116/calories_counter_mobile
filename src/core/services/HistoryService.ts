@@ -14,12 +14,13 @@ export class HistoryService {
     history.scores = counter.scores
     history.counter_id = counter.id
     history.id = new IdGenerator().generate()
+    history.counter = [counter]
 
     return history
   }
 
   async save(counter: Counter<Score>, date: Date): Promise<History> {
-    let history = await this.historyRepository.findByDateAndCounterId(date, counter.id)
+    let history = await this.historyRepository.findByDateAndCounter(date, counter)
 
     if (history) {
       history.scores = counter.scores

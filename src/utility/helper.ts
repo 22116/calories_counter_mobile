@@ -17,6 +17,28 @@ export function dateFormat(x: Date, y: string): string {
   })
 }
 
+export function getRelativeDayInWeek(date: Date, i: number): Date {
+  const d = new Date(date)
+  const day = d.getDay()
+
+  let diff = (day <= 5) ? (7 - i + day ) : (day - i)
+
+  if (((7 - i + day) % 7) === 0) {
+    diff = (7 - i + day) % 7
+  }
+
+  if (i < day) {
+    diff = day - i
+  }
+
+  d.setDate(d.getDate() - diff)
+  d.setHours(0)
+  d.setMinutes(0)
+  d.setSeconds(0)
+
+  return d
+}
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function formatEnum(e: Object): Array<string> {
   const data = Object.values(e)
