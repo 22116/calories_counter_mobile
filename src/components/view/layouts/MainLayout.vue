@@ -88,7 +88,7 @@
 import EssentialLink from 'components/helpers/EssentialLink.vue'
 import CreateCounter from 'components/modals/counter/CreateCounter.vue'
 import EditCounter from 'components/modals/counter/EditCounter.vue'
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { Counter, Score } from 'src/core/entities/counter'
 import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
 import links from './links'
@@ -100,6 +100,7 @@ import {
   HistorySaveEvent
 } from 'src/core/services/events'
 import { CounterService } from 'src/core/services/CounterService'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
 
 @Component({
   components: { ConfirmSliderLeft, EditCounter, CreateCounter, EssentialLink }
@@ -160,14 +161,11 @@ export default class MainLayout extends Vue {
   }
 
   async loadUserCounters() {
-    this.counters = await this.$orm.repository.counter.findAll()
-  }
+    this.counters = await this.$orm.repository.counter.setProxy(new InMemory()).findAll()
 
-  @Watch('counters', {deep: true, immediate: true})
-  async syncCounterLinks(counters: Array<Counter<Score>>) {
     const links = []
 
-    for (const counter of counters) {
+    for (const counter of this.counters) {
       if (counter.enabled) {
         links.push(await this.createCounterLink(counter, this.date))
       }
@@ -177,7 +175,9 @@ export default class MainLayout extends Vue {
   }
 
   async createCounterLink(counter: Counter<Score>, date: Date) {
-    const history = await this.$orm.repository.history.findByDateAndCounter(date, counter)
+    const history = await this.$orm.repository.history
+      .setProxy(new InMemory(counter.id + date.toISOString()))
+      .findByDateAndCounter(date, counter)
     const succeed = this.$container.resolve(CounterService).isSucceed(history ? history.getCounter() : counter)
 
     return {

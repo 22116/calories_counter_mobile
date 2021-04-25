@@ -19,6 +19,7 @@ export class CounterDeletedEventHandler implements EventHandler {
 
     await this.counterRepository.update(event.counter)
     void this.counterRepository.setProxy(new InMemory()).clear().findAll()
+    void this.counterRepository.setProxy(new InMemory(event.counter.id)).clear()
 
     Notify.create({
       type: 'positive',

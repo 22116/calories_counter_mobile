@@ -3,6 +3,7 @@ import { IdGenerator } from 'src/utility/encryption'
 import { Score } from 'src/core/entities/Counter'
 import { inject, injectable } from 'tsyringe'
 import { HistoryRepository } from 'src/core/repositories'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
 
 @injectable()
 export class HistoryService {
@@ -20,7 +21,9 @@ export class HistoryService {
   }
 
   async save(counter: Counter<Score>, date: Date): Promise<History> {
-    let history = await this.historyRepository.findByDateAndCounter(date, counter)
+    let history = await this.historyRepository
+      .setProxy(new InMemory(date.toISOString() + counter.id))
+      .findByDateAndCounter(date, counter)
 
     if (history) {
       history.scores = counter.scores

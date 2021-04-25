@@ -21,6 +21,7 @@ export class CounterUpdatedEventHandler implements EventHandler {
   async handle(event: CounterUpdatedEvent) {
     await this.counterRepository.save(event.counter)
     void this.counterRepository.setProxy(new InMemory()).clear().findAll()
+    void this.counterRepository.setProxy(new InMemory(event.counter.id)).clear().find(event.counter.id)
 
     Notify.create({
       type: 'positive',

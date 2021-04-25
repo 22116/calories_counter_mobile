@@ -27,6 +27,7 @@ import { CounterType } from 'src/core/entities/counter'
 import { History } from 'src/core/entities'
 import { CounterService } from 'src/core/services/CounterService'
 import { cloneDeep } from 'lodash'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
 
 type Option = {
   counter: string,
@@ -94,7 +95,7 @@ export default class StreakTable extends Vue {
     }
 
     for (const id in streaks) {
-      const counter = await this.$orm.repository.counter.find(id)
+      const counter = await this.$orm.repository.counter.setProxy(new InMemory(id)).find(id)
 
       if (!counter) {
         continue

@@ -4,6 +4,8 @@ import { VueConstructor } from 'vue'
 import { SettingName } from 'src/core/entities/Setting'
 import { HistoryService } from 'src/core/services/HistoryService'
 import { CounterService } from 'src/core/services/CounterService'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
+import { generateMonthlyCacheKey } from 'src/utility/helper/string'
 
 async function addMissedDays(data: { Vue: VueConstructor }) {
   const counters = await data.Vue.$orm.repository.counter.findAll()
@@ -52,11 +54,20 @@ async function initializeSettings(data: { Vue: VueConstructor }) {
   }
 }
 
+async function loadDataAsync(data: { Vue: VueConstructor }) {
+  await data.Vue.$orm.repository.counter.setProxy(new InMemory()).findAll()
+  await data.Vue.$orm.repository.history.setProxy(new InMemory()).findAll()
+  await data.Vue.$orm.repository.history
+    .setProxy(new InMemory(generateMonthlyCacheKey(new Date())))
+    .findByMonth(new Date())
+}
+
 export default boot(async (data: { Vue: VueConstructor }) => {
   Loading.show()
 
   await addMissedDays(data)
   await initializeSettings(data)
+  void loadDataAsync(data)
 
   Loading.hide()
 })

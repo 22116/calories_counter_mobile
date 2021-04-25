@@ -7,3 +7,9 @@ export {
   Setting,
   History
 }
+
+export const Serializable = [
+  Counter,
+  History,
+  Setting
+]

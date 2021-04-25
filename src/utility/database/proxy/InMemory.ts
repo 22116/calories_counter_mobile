@@ -10,9 +10,7 @@ export class InMemory<T extends Table> implements Proxy {
 
   private repository!: Repository<T>
 
-  public constructor(private key = 'main') {
-
-  }
+  public constructor(private key = 'main') { }
 
   setRepository(repository: Repository<T>): this {
     this.repository = repository
@@ -43,7 +41,7 @@ export class InMemory<T extends Table> implements Proxy {
       return await this.handle(result)
     }
 
-    if (undefined === InMemory.cache[scope]?.[this.key]) {
+    if (isEmpty(InMemory.cache[scope]?.[this.key])) {
       if (isEmpty(InMemory.status[scope])) {
         InMemory.status[scope] = {}
       }
@@ -54,6 +52,12 @@ export class InMemory<T extends Table> implements Proxy {
 
       InMemory.status[scope][this.key] = false
       InMemory.cache[scope][this.key] = await result
+
+      // SCRATCH: in some scenarios result returns undefined for a mystic reason on the first run
+      while (undefined === InMemory.cache[scope][this.key]) {
+        InMemory.cache[scope][this.key] = await result
+      }
+
       InMemory.status[scope][this.key] = true
     }
 

@@ -86,9 +86,9 @@ export class HistoryRepository extends Repository<History> {
         `
             SELECT *
             FROM history
-            WHERE date(date) BETWEEN date(:min) AND (:max) AND
+            WHERE (date(date) BETWEEN date(:min) AND date(:max) OR date(date) = date(:max)) AND
                   counter_id = :counter_id
-            ORDER BY date(date) DESC
+            ORDER BY date(date)
         `,
         [minDate.toISOString(), date.toISOString(), counter.id],
       )

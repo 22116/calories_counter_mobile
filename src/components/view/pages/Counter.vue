@@ -12,6 +12,7 @@ import CounterTypeMixin from 'components/mixins/CounterTypeMixin'
 import CounterView from 'components/view/CounterView.vue'
 import { EventService } from 'src/core/services/EventService'
 import { HistorySaveEvent } from 'src/core/services/events'
+import { InMemory } from 'src/utility/database/proxy/InMemory'
 
 @Component({
   components: { CounterView, GoalCounter, BinaryCounter, LimitedCounter }
@@ -26,7 +27,9 @@ export default class PageCounter extends CounterTypeMixin {
   }
 
   async mounted() {
-    const counter = await this.$orm.repository.counter.find(this.$route.params.hash)
+    const counter = await this.$orm.repository.counter
+      .setProxy(new InMemory(this.$route.params.hash))
+      .find(this.$route.params.hash)
 
     if (!counter) {
       console.error('Cannot find counter object')
@@ -34,10 +37,12 @@ export default class PageCounter extends CounterTypeMixin {
       return
     }
 
-    let history = await this.$orm.repository.history.findByDateAndCounter(
-      new Date(this.$route.params.date),
-      counter
-    )
+    let history = await this.$orm.repository.history
+      .setProxy(new InMemory(counter.id + this.$route.params.date))
+      .findByDateAndCounter(
+        new Date(this.$route.params.date),
+        counter
+      )
 
     this.counter = history ? history.getCounter() : counter
     this.$q.loading.hide()

@@ -33,6 +33,7 @@ import Whitelist from 'components/modals/counter/Whitelist.vue'
 import { Counter, History } from 'src/core/entities'
 import { Score } from 'src/core/entities/Counter'
 import { InMemory } from 'src/utility/database/proxy/InMemory'
+import { generateMonthlyCacheKey } from 'src/utility/helper/string'
 
 @Component({
   components: { Whitelist, HistoryCalendar },
@@ -52,8 +53,7 @@ export default class PageHistory extends Vue {
 
   async mounted() {
     this.history = await this.$orm.repository.history
-      .setProxy(new InMemory(PageHistory.dateToKey(new Date())))
-      .clear()
+      .setProxy(new InMemory(generateMonthlyCacheKey(new Date())))
       .findByMonth(new Date())
     this.counters = await this.$orm.repository.counter
       .setProxy(new InMemory())
@@ -68,13 +68,6 @@ export default class PageHistory extends Vue {
     this.history = await this.$orm.repository.history
       .setProxy(new InMemory(JSON.stringify(date)))
       .findByMonth(new Date(date.year, date.month))
-  }
-
-  private static dateToKey(date: Date): string {
-    return JSON.stringify({
-      year: date.getFullYear(),
-      month: date.getMonth(),
-    })
   }
 };
 </script>
