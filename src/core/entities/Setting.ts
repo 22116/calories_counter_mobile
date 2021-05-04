@@ -1,6 +1,8 @@
 import { column, ColumnType, database, Table } from 'websql-orm'
 import { DB_NAME } from 'src/core/constants'
 
+export type SettingDark = null|'auto'|boolean
+
 export enum SettingName {
   Dark = 'dark',
   Version = 'version',

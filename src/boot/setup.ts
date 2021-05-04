@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers'
 import { colors, Dark, Loading } from 'quasar'
 import { VueConstructor } from 'vue'
-import { SettingName } from 'src/core/entities/Setting'
+import { SettingDark, SettingName } from 'src/core/entities/Setting'
 import { HistoryService } from 'src/core/services/HistoryService'
 import { CounterService } from 'src/core/services/CounterService'
 import { InMemory } from 'src/utility/database/proxy/InMemory'
@@ -45,8 +45,8 @@ async function addMissedDays(data: { Vue: VueConstructor }) {
 }
 
 async function initializeSettings(data: { Vue: VueConstructor }) {
-  const dark = (await data.Vue.$orm.repository.setting.find(SettingName.Dark)).value as null|'auto'|boolean
-  const theme = (await data.Vue.$orm.repository.setting.find(SettingName.Theme)).value as null|string
+  const dark = (await data.Vue.$orm.repository.setting.find(SettingName.Dark)).value as SettingDark
+  const theme = (await data.Vue.$orm.repository.setting.find(SettingName.Theme)).value as string|null
 
   if (dark !== null || dark === 'auto') {
     Dark.set(dark as boolean|'auto')

@@ -64,7 +64,7 @@ function deviceReady(): Promise<void> {
 async function loadFixtures(): Promise<void> {
   await sqlite.fromSqlByJs(DB_NAME, `
     INSERT OR IGNORE INTO counters (id, name, description, type, icon, createdAt, theme, scores, enabled, timeouts) VALUES
-        ('counter_1', 'Test1', 'test123', 1, 'user', '2021-04-01', 1, '{"value": false}', 1, '["daily"]'),
+        ('counter_1', 'Test1', 'test123', 1, 'user', '2021-04-01', 1, '{"value": false}', 1, '["friday"]'),
         ('counter_2', 'Test2', 'test124', 1, 'admin', '2021-04-22', 1, '{"value": false}', 1, '["daily"]'),
         ('counter_3', 'Test3', 'test125', 1, 'toilet', '2021-04-20', 1, '{"value": false}', 1, '["daily"]');
   `, [])

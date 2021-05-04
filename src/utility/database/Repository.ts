@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-assignment */
 import { sqlite, Table } from 'websql-orm'
 import { EmptyProxy, Proxy } from './proxy/Proxy'
 import { cloneDeep } from 'lodash'

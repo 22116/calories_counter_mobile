@@ -75,7 +75,7 @@ export default class StreakTable extends Vue {
       }
 
       if (
-        streaks[row.counter_id]?.prev.date.toISOString() === row.date.toISOString() &&
+        this.$container.resolve(CounterService).isDue(row.getCounter(), row.date) &&
         this.$container.resolve(CounterService).isSucceed(row.getCounter())
       ) {
         streaks[row.counter_id].curStreak++
@@ -91,7 +91,7 @@ export default class StreakTable extends Vue {
 
       streaks[row.counter_id].prev = row
 
-      row.date.setDate(row.date.getDate() + 1)
+      row.date.setTime(row.date.getTime() + (86400 * 1000))
     }
 
     for (const id in streaks) {
