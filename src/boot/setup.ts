@@ -7,8 +7,13 @@ import { CounterService } from 'src/core/services/CounterService'
 import { InMemory } from 'src/utility/database/proxy/InMemory'
 import { generateMonthlyCacheKey } from 'src/utility/helper/string'
 
+function getDays(date: Date): number {
+  return Math.floor(date.getTime() / 86400 / 1000)
+}
+
 async function addMissedDays(data: { Vue: VueConstructor }) {
   const counters = await data.Vue.$orm.repository.counter.findAll()
+  const date = getDays(new Date())
 
   for (const counter of counters) {
     if (!counter.enabled) {
@@ -24,10 +29,8 @@ async function addMissedDays(data: { Vue: VueConstructor }) {
       await data.Vue.$orm.repository.history.save(history)
     }
 
-    const date = new Date()
-
-    while (history && history.date.getDate() < date.getDate()) {
-      history.date.setDate(history.date.getDate() + 1)
+    while (history && getDays(history.date) < date) {
+      history.date.setTime(history.date.getTime() + (86400 * 1000))
 
       if (!data.Vue.$container.resolve(CounterService).isDue(history.getCounter(), history.date)) {
         continue
