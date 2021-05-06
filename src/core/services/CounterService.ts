@@ -14,7 +14,6 @@ class Scheduler {
   public isDue(timeouts: Array<TimeoutList>, date: Date): boolean {
     for (const timeout of timeouts) {
       switch (timeout) {
-        case TimeoutList.Daily:     return true
         case TimeoutList.Monthly:   if (date.getDate() === 1) return true; else break
         case TimeoutList.Yearly:    if (date.getMonth() === 1 && date.getDate() === 1) return true; else break
         case TimeoutList.Sunday:    if (date.getDay() === 0) return true; else break

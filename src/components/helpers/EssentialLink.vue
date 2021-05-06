@@ -5,6 +5,7 @@
     </q-item-section>
 
     <q-item-section>
+      <slot name='pre' />
       <q-item-label>{{ title }}</q-item-label>
       <q-item-label caption>
         {{ caption }}
@@ -12,7 +13,7 @@
     </q-item-section>
 
     <q-item-section side>
-      <slot></slot>
+      <slot />
     </q-item-section>
   </q-item>
 </template>

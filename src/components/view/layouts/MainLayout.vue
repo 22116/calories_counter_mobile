@@ -39,15 +39,25 @@
         <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link" />
         <confirm-slider-left
           question='Are you sure you want to delete this counter?'
-          v-for="link in counterLinks"
-          :key="link.title"
+          v-for="(link, index) in counterLinks"
+          :key="index"
           left-color="red"
-          @success='() => onCounterDeleted(link.hash)'
+          @success='() => onCounterDeleted(link.counter.id)'
         >
           <essential-link
-            v-touch-hold:600.mouse="() => onCounterLinkHold(link.hash)"
+            v-touch-hold:600.mouse="() => onCounterLinkHold(link.counter.id)"
             v-bind="link"
-          />
+          >
+            <q-item-label slot='pre' class='calendar'>
+              <q-badge
+                v-for='(timeout, index) in link.counter.timeouts'
+                :key='index'
+                :color='index % 2 ? "info" : "primary"'
+              >
+                {{ getTimeoutListShort(timeout) }}
+              </q-badge>
+            </q-item-label>
+          </essential-link>
           <template v-slot:left>
             Delete
             <q-icon name="delete" />
@@ -89,7 +99,7 @@ import EssentialLink from 'components/helpers/EssentialLink.vue'
 import CreateCounter from 'components/modals/counter/CreateCounter.vue'
 import EditCounter from 'components/modals/counter/EditCounter.vue'
 import { Component, Vue } from 'vue-property-decorator'
-import { Counter, Score } from 'src/core/entities/counter'
+import { Counter, Score, TimeoutList } from 'src/core/entities/counter'
 import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
 import links from './links'
 import { EventService } from 'src/core/services/EventService'
@@ -108,7 +118,7 @@ import { InMemory } from 'src/utility/database/proxy/InMemory'
 export default class MainLayout extends Vue {
   public leftDrawerOpen = false
   public essentialLinks = links
-  public counterLinks: Array<{ hash: string }> = []
+  public counterLinks: Array<{ counter: Counter<Score> }> = []
   public counters: Array<Counter<Score>> = []
   public counter: Counter<Score>|null = null
   public hash = ''
@@ -189,11 +199,25 @@ export default class MainLayout extends Vue {
         'bg-green-transparent': succeed,
         'bg-red-transparent': !succeed,
       },
-      hash: counter.id
+      counter
     }
   }
 
-  public beforeDestroy() {
+  getTimeoutListShort(timeout: TimeoutList): string {
+    switch (timeout) {
+      case TimeoutList.Monday:    return 'MN'
+      case TimeoutList.Tuesday:   return 'TU'
+      case TimeoutList.Wednesday: return 'WN'
+      case TimeoutList.Thursday:  return 'TH'
+      case TimeoutList.Friday:    return 'FR'
+      case TimeoutList.Saturday:  return 'SAT'
+      case TimeoutList.Sunday:    return 'SN'
+      case TimeoutList.Monthly:   return 'Monthly'
+      case TimeoutList.Yearly:    return 'Yearly'
+    }
+  }
+
+  beforeDestroy() {
     clearInterval(this.timer)
   }
 }
@@ -203,6 +227,11 @@ export default class MainLayout extends Vue {
 .body--dark
   div.sidebar-content
     background: #1e1e1e !important
+
+.calendar
+    .q-badge
+      padding: 2px
+      margin-right: 2px
 
 .tip
   min-height: auto

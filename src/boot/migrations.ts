@@ -39,7 +39,25 @@ export default boot(async ({ Vue }) => {
   if (version.value < 2) {
     await sqlite.fromSqlByJs(
       DB_NAME,
-      `ALTER TABLE counters ADD COLUMN timeouts TEXT DEFAULT '${JSON.stringify([TimeoutList.Daily])}'`,
+      'ALTER TABLE counters ADD COLUMN timeouts TEXT DEFAULT \'["daily"]\'',
+      []
+    )
+  }
+
+  if (version.value < 3) {
+    await sqlite.fromSqlByJs(
+      DB_NAME,
+      `UPDATE counters SET timeouts = REPLACE(
+        timeouts,
+        '["daily"]',
+        '${JSON.stringify([
+          TimeoutList.Sunday,
+          TimeoutList.Monday,
+          TimeoutList.Tuesday,
+          TimeoutList.Wednesday,
+          TimeoutList.Friday,
+          TimeoutList.Saturday
+        ])}')`,
       []
     )
   }
@@ -64,9 +82,23 @@ function deviceReady(): Promise<void> {
 async function loadFixtures(): Promise<void> {
   await sqlite.fromSqlByJs(DB_NAME, `
     INSERT OR IGNORE INTO counters (id, name, description, type, icon, createdAt, theme, scores, enabled, timeouts) VALUES
-        ('counter_1', 'Test1', 'test123', 1, 'user', '2021-04-01', 1, '{"value": false}', 1, '["friday"]'),
-        ('counter_2', 'Test2', 'test124', 1, 'admin', '2021-04-22', 1, '{"value": false}', 1, '["daily"]'),
-        ('counter_3', 'Test3', 'test125', 1, 'toilet', '2021-04-20', 1, '{"value": false}', 1, '["daily"]');
+        ('counter_1', 'Test1', 'test123', 1, 'user', '2021-04-01', 1, '{"value": false}', 1, '["${TimeoutList.Friday}"]'),
+        ('counter_2', 'Test2', 'test124', 1, 'admin', '2021-04-22', 1, '{"value": false}', 1, '${JSON.stringify([
+          TimeoutList.Sunday,
+          TimeoutList.Monday,
+          TimeoutList.Tuesday,
+          TimeoutList.Wednesday,
+          TimeoutList.Friday,
+          TimeoutList.Saturday
+        ])}'),
+        ('counter_3', 'Test3', 'test125', 1, 'toilet', '2021-04-20', 1, '{"value": false}', 1, '${JSON.stringify([
+          TimeoutList.Sunday,
+          TimeoutList.Monday,
+          TimeoutList.Tuesday,
+          TimeoutList.Wednesday,
+          TimeoutList.Friday,
+          TimeoutList.Saturday
+        ])}');
   `, [])
   await sqlite.fromSqlByJs(DB_NAME, `
     INSERT OR IGNORE INTO history (id, date, counter_id, scores) VALUES
