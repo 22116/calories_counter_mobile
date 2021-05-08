@@ -64,6 +64,7 @@ export default boot(async ({ Vue }) => {
           TimeoutList.Monday,
           TimeoutList.Tuesday,
           TimeoutList.Wednesday,
+          TimeoutList.Thursday,
           TimeoutList.Friday,
           TimeoutList.Saturday
         ])}')`,

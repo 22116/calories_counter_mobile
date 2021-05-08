@@ -121,8 +121,10 @@
     "reset": "Reset",
     "add": "Add",
     "back": "Back",
+    "previous": "Previous",
     "close": "Close",
     "cancel": "Cancel",
+    "next": "Next",
     "question": {
       "confirm": "Are you sure?"
     }
