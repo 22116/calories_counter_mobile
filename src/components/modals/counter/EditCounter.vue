@@ -1,6 +1,6 @@
 <template>
   <state-counter
-    title='Edit counter'
+    :title='$t("modals.counter.edit.title")'
     v-model='counter'
     :show='true'
     @success="(value) => $emit('success', value)"

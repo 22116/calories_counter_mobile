@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-card-section class="q-pt-none">
-      <q-select v-model="type" :options="types" label="Type">
+      <q-select v-model="type" :options="types" :label="$t('general.type')">
         <template v-slot:option="scope">
           <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
             <q-item-section>
@@ -14,16 +14,16 @@
     </q-card-section>
 
     <q-card-section v-if="isLimitedCounter(counter)" class="q-pt-none">
-      <q-input v-model.number="additionalProperties.limit" min="0" label="Limit" />
-      <q-input v-model.number="additionalProperties.current" min="0" label="Default" />
+      <q-input v-model.number="additionalProperties.limit" min="0" :label="$t('general.limit')" />
+      <q-input v-model.number="additionalProperties.current" min="0" :label="$t('general.default')" />
     </q-card-section>
 
     <q-card-section v-if="isGoalCounter(counter)" class="q-pt-none">
-      <q-input v-model.number="additionalProperties.current" min="0" label="Goal" />
+      <q-input v-model.number="additionalProperties.current" min="0" :label="$t('general.goal')" />
     </q-card-section>
 
     <q-card-section v-if="isBinaryCounter(counter)" class="q-pt-none">
-      <q-select v-model="theme" :options="binaryThemes" label="Theme" />
+      <q-select v-model="theme" :options="binaryThemes" :label="$t('general.theme')" />
     </q-card-section>
   </div>
 </template>
@@ -96,7 +96,12 @@ export default class Type extends CounterTypeMixin {
   }
 
   getDescription(type: CounterType): string {
-    return this.$container.resolve(CounterService).getCounterTypeDescription(type)
+    switch (type) {
+      case CounterType.Binary: return this.$t('general.counters.binary.description').toString()
+      case CounterType.Limited: return this.$t('general.counters.limited.description').toString()
+      case CounterType.Goal: return this.$t('general.counters.goal.description').toString()
+      default: return ''
+    }
   }
 
   @Emit('input')

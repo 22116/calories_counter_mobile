@@ -9,13 +9,12 @@
     />
 
     <div class="row q-gutter-md q-pa-lg">
-      <q-badge color="red">Some of the counters are not passed</q-badge>
-      <q-badge color="green">All counters reached</q-badge>
+      <q-badge color="red">{{ $t('pages.history.mark.red') }}</q-badge>
+      <q-badge color="green">{{ $t('pages.history.mark.green') }}</q-badge>
     </div>
 
     <div class="row q-gutter-md q-pa-lg text-grey">
-      Help: Tap on the day to switch on the counter in the past. You can
-      switch to the date where you already have registered counter.
+      {{ $t('pages.history.help') }}
     </div>
 
     <q-page-sticky v-if='history.length' position="top-right" :offset="[5, 5]">

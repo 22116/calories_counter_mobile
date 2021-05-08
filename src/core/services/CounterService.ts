@@ -98,15 +98,6 @@ export class CounterService {
     }
   }
 
-  getCounterTypeDescription(type: CounterType): string {
-    switch (type) {
-      case CounterType.Binary: return 'Just a button. Yes/No'
-      case CounterType.Limited: return 'Make a restriction which you cannot break'
-      case CounterType.Goal: return 'Count how many steps left to pass your goal'
-      default: return ''
-    }
-  }
-
   isDue(counter: Counter<Score>, date: Date): boolean {
     return this.scheduler.isDue(counter.timeouts, date)
   }

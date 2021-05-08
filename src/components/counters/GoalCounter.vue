@@ -12,7 +12,7 @@
       class="col-auto justify-center"
     >
       <span v-if="!completed">
-        {{ counterSync.scores.current }} left
+        {{ $tc('general.counters.goal.left', counterSync.scores.current) }}
       </span>
       <span v-else>
         Passed!
@@ -20,8 +20,8 @@
     </q-circular-progress>
     <div class="col-12 q-mt-xl">
       <div class='row'>
-        <add-button class="col flex" :class='{"justify-end": !completed, "justify-center": completed }' label="Back" @success="back" />
-        <add-button v-if="!completed" class="col flex justify-center q-mx-md" label="Add" @success="forward" />
+        <add-button class="col flex" :class='{"justify-end": !completed, "justify-center": completed }' :label="$t('back')" @success="back" />
+        <add-button v-if="!completed" class="col flex justify-center q-mx-md" :label="$t('Add')" @success="forward" />
         <div v-if="!completed" class='col'>
           <q-fab class='full-height' square color="primary" icon="keyboard_arrow_up" direction="up">
             <q-fab-action

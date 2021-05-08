@@ -1,8 +1,8 @@
 import { sqlite } from 'websql-orm'
 import { CounterRepository, HistoryRepository, SettingRepository } from 'src/core/repositories'
-import _Vue from 'vue'
+import Vue from 'vue'
 
-export default (Vue: typeof _Vue) => {
+export default (app: typeof Vue) => {
   const orm = {
     db: sqlite,
     repository: {
@@ -13,6 +13,6 @@ export default (Vue: typeof _Vue) => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  Vue.prototype.$orm = orm
-  Vue.$orm = orm
+  app.prototype.$orm = orm
+  app.$orm = orm
 }

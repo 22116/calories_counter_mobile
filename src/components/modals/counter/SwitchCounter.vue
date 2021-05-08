@@ -2,11 +2,11 @@
   <q-dialog v-model="show">
     <q-card style="min-width: 350px">
       <q-card-section>
-        <div class="text-h6">Pick counter to switch</div>
+        <div class="text-h6">{{ $t('modals.counter.switch.title') }}</div>
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-select v-model="counterOption" :options="counterOptions" label="Type">
+        <q-select v-model="counterOption" :options="counterOptions" :label="$t('general.type')">
           <template v-slot:option="scope">
             <q-item
               v-bind="scope.itemProps"
@@ -30,8 +30,8 @@
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" v-close-popup />
-        <q-btn flat label="Ok" @click="switchCounter" v-close-popup />
+        <q-btn flat :label="$t('general.cancel')" v-close-popup />
+        <q-btn flat :label="$t('general.confirm')" @click="switchCounter" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>

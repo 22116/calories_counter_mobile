@@ -6,6 +6,7 @@ import { HistoryService } from 'src/core/services/HistoryService'
 import { CounterService } from 'src/core/services/CounterService'
 import { InMemory } from 'src/utility/database/proxy/InMemory'
 import { generateMonthlyCacheKey } from 'src/utility/helper/string'
+import { i18n } from 'boot/plugins'
 
 function getDays(date: Date): number {
   return Math.floor(date.getTime() / 86400 / 1000)
@@ -47,6 +48,7 @@ async function addMissedDays(data: { Vue: VueConstructor }) {
 async function initializeSettings(data: { Vue: VueConstructor }) {
   const dark = (await data.Vue.$orm.repository.setting.find(SettingName.Dark)).value as SettingDark
   const theme = (await data.Vue.$orm.repository.setting.find(SettingName.Theme)).value as string|null
+  const locale = (await data.Vue.$orm.repository.setting.find(SettingName.Locale)).value as string|null
 
   if (dark !== null || dark === 'auto') {
     Dark.set(dark as boolean|'auto')
@@ -54,6 +56,10 @@ async function initializeSettings(data: { Vue: VueConstructor }) {
 
   if (theme) {
     colors.setBrand('primary', theme)
+  }
+
+  if (locale) {
+    i18n.locale = locale
   }
 }
 

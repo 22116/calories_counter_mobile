@@ -1,15 +1,15 @@
 <template>
     <div>
       <q-card-section class="q-pt-none">
-        <q-input v-model.trim="counter.name" label="Name" />
+        <q-input v-model.trim="counter.name" :label="$t('general.name')" />
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-input v-model.trim="counter.description" label="Description" />
+        <q-input v-model.trim="counter.description" :label="$t('general.description')" />
       </q-card-section>
 
       <q-card-section class="q-pt-none">
-        <q-select v-model="counter.icon" :options="icons" label="Icon">
+        <q-select v-model="counter.icon" :options="icons" :label="$t('general.icon')">
           <template v-slot:append>
             <q-avatar>
               <q-icon :name="counter.icon" />

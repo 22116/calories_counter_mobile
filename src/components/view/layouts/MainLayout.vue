@@ -34,11 +34,11 @@
           header
           class="text-grey-8"
         >
-          Navigation menu
+          {{ $t('menu.title') }}
         </q-item-label>
         <essential-link v-for="link in essentialLinks" :key="link.title" v-bind="link" />
         <confirm-slider-left
-          question='Are you sure you want to delete this counter?'
+          :question='$t("modals.counter.delete.title")'
           v-for="(link, index) in counterLinks"
           :key="index"
           left-color="red"
@@ -59,7 +59,7 @@
             </q-item-label>
           </essential-link>
           <template v-slot:left>
-            Delete
+            {{ $t('general.delete') }}
             <q-icon name="delete" />
           </template>
         </confirm-slider-left>
@@ -70,12 +70,12 @@
         </q-item>
         <q-item class='tip'>
           <q-item-section class="text-center text-grey">
-            Swipe right to delete
+            {{ $t('menu.swipe-right') }}
           </q-item-section>
         </q-item>
         <q-item class='tip'>
           <q-item-section class="text-center text-grey">
-            Hold to edit
+            {{ $t('menu.hold') }}
           </q-item-section>
         </q-item>
       </q-list>
@@ -101,7 +101,6 @@ import EditCounter from 'components/modals/counter/EditCounter.vue'
 import { Component, Vue } from 'vue-property-decorator'
 import { Counter, Score, TimeoutList } from 'src/core/entities/counter'
 import ConfirmSliderLeft from 'components/helpers/sliders/ConfirmSliderLeft.vue'
-import links from './links'
 import { EventService } from 'src/core/services/EventService'
 import {
   CounterCreatedEvent,
@@ -117,13 +116,35 @@ import { InMemory } from 'src/utility/database/proxy/InMemory'
 })
 export default class MainLayout extends Vue {
   public leftDrawerOpen = false
-  public essentialLinks = links
   public counterLinks: Array<{ counter: Counter<Score> }> = []
   public counters: Array<Counter<Score>> = []
   public counter: Counter<Score>|null = null
   public hash = ''
   public date = new Date()
   public timer = 0
+
+  get essentialLinks() {
+    return [
+      {
+        title: this.$t('menu.history.title'),
+        caption: this.$t('menu.history.caption'),
+        icon: 'calendar_today',
+        link: '/history'
+      },
+      {
+        title: this.$t('menu.settings.title'),
+        caption: this.$t('menu.settings.caption'),
+        icon: 'settings',
+        link: '/settings'
+      },
+      {
+        title: this.$t('menu.statistics.title'),
+        caption: this.$t('menu.statistics.caption'),
+        icon: 'analytics',
+        link: '/statistics'
+      },
+    ]
+  }
 
   async mounted() {
     await this.loadUserCounters()
@@ -205,15 +226,15 @@ export default class MainLayout extends Vue {
 
   getTimeoutListShort(timeout: TimeoutList): string {
     switch (timeout) {
-      case TimeoutList.Monday:    return 'MN'
-      case TimeoutList.Tuesday:   return 'TU'
-      case TimeoutList.Wednesday: return 'WN'
-      case TimeoutList.Thursday:  return 'TH'
-      case TimeoutList.Friday:    return 'FR'
-      case TimeoutList.Saturday:  return 'SAT'
-      case TimeoutList.Sunday:    return 'SN'
-      case TimeoutList.Monthly:   return 'Monthly'
-      case TimeoutList.Yearly:    return 'Yearly'
+      case TimeoutList.Monday:    return this.$t('general.calendar.short.monday').toString()
+      case TimeoutList.Tuesday:   return this.$t('general.calendar.short.tuesday').toString()
+      case TimeoutList.Wednesday: return this.$t('general.calendar.short.wednesday').toString()
+      case TimeoutList.Thursday:  return this.$t('general.calendar.short.thursday').toString()
+      case TimeoutList.Friday:    return this.$t('general.calendar.short.friday').toString()
+      case TimeoutList.Saturday:  return this.$t('general.calendar.short.saturday').toString()
+      case TimeoutList.Sunday:    return this.$t('general.calendar.short.sunday').toString()
+      case TimeoutList.Monthly:   return this.$t('general.calendar.monthly').toString()
+      case TimeoutList.Yearly:    return this.$t('general.calendar.yearly').toString()
     }
   }
 

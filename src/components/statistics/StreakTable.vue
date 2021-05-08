@@ -3,25 +3,25 @@
     <template v-if='data.length'>
       <q-table
         grid
-        title="Streaks"
+        :title='$t("general.statistics.streak-table.title")'
         dense
-        :data="data"
-        :columns="columns"
-        row-key="name"
+        :data='data'
+        :columns='columns'
+        row-key='name'
       />
     </template>
     <template v-else>
       <q-item>
         <q-item-section>
-          No streak data available yet
+          {{ $t('general.statistics.streak-table.empty') }}
         </q-item-section>
       </q-item>
     </template>
   </div>
 </template>
 
-<script lang="ts">
-import { Vue, Component, VModel,  } from 'vue-property-decorator'
+<script lang='ts'>
+import { Vue, Component, VModel } from 'vue-property-decorator'
 import { formatEnum } from 'src/utility/helper'
 import { CounterType } from 'src/core/entities/counter'
 import { History } from 'src/core/entities'
@@ -39,13 +39,43 @@ type Option = {
 
 @Component
 export default class StreakTable extends Vue {
-  @VModel({type: Array, required: true}) public history!: Array<History>
+  @VModel({ type: Array, required: true }) public history!: Array<History>
   public columns = [
-    { name: 'Counter', align: 'left', label: 'Counter', field: 'counter', sortable: true },
-    { name: 'Type', align: 'center', label: 'Type', field: 'type', sortable: true },
-    { name: 'Created Date', align: 'center', label: 'Created Date', field: 'createdAt', sortable: true },
-    { name: 'MaxStreak', align: 'center', label: 'Maximum Streak', field: 'maxStreak', sortable: true },
-    { name: 'CurStreak', align: 'center', label: 'Current Streak', field: 'curStreak', sortable: true },
+    {
+      name: 'Counter',
+      align: 'left',
+      label: this.$t('general.statistics.streak-table.columns.counter'),
+      field: 'counter',
+      sortable: true
+    },
+    {
+      name: 'Type',
+      align: 'center',
+      label: this.$t('general.statistics.streak-table.columns.type'),
+      field: 'type',
+      sortable: true
+    },
+    {
+      name: 'Created Date',
+      align: 'center',
+      label: this.$t('general.statistics.streak-table.columns.created'),
+      field: 'createdAt',
+      sortable: true
+    },
+    {
+      name: 'MaxStreak',
+      align: 'center',
+      label: this.$t('general.statistics.streak-table.columns.max'),
+      field: 'maxStreak',
+      sortable: true
+    },
+    {
+      name: 'CurStreak',
+      align: 'center',
+      label: this.$t('general.statistics.streak-table.columns.current'),
+      field: 'curStreak',
+      sortable: true
+    }
   ]
   public data: Array<Option> = []
 
@@ -70,7 +100,7 @@ export default class StreakTable extends Vue {
           maxStreak: 1,
           curStreak: 1,
           prev: row,
-          first: row,
+          first: row
         }
       }
 
@@ -106,7 +136,7 @@ export default class StreakTable extends Vue {
         type: formatEnum(CounterType)[counter.type],
         createdAt: counter.createdAt.toDateString(),
         maxStreak: streaks[id].maxStreak - 1,
-        curStreak: streaks[id].curStreak - 1,
+        curStreak: streaks[id].curStreak - 1
       })
     }
 

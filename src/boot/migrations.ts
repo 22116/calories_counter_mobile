@@ -1,11 +1,12 @@
 import { boot } from 'quasar/wrappers'
-import { Loading } from 'quasar'
+import { Loading, Quasar } from 'quasar'
 import { EnvConfig, sqlite } from 'websql-orm'
 import { DB_NAME, VERSION } from 'src/core/constants'
 import { Counter, History, Setting } from 'src/core/entities'
 import { TimeoutList } from 'src/core/entities/Counter'
 import { SettingRepository } from 'src/core/repositories'
 import { SettingName } from 'src/core/entities/Setting'
+import { Locale } from 'src/i18n'
 
 export default boot(async ({ Vue }) => {
   if (process.env.PROD) {
@@ -27,11 +28,19 @@ export default boot(async ({ Vue }) => {
   await sqlite.init(new Counter())
   await sqlite.init(new History())
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
+  let locale = Quasar.lang.getLocale()
+
+  if (![Locale.En, Locale.Ru].includes(locale)) {
+    locale = Locale.En
+  }
+
   await sqlite.fromSqlByJs(DB_NAME, `INSERT OR IGNORE INTO settings (name, value) VALUES
     ('dark', 'auto'),
     ('theme', '#1976D2'),
-    ('version', :version)
-  `, [VERSION])
+    ('version', :version),
+    ('locale', :locale)
+  `, [VERSION, locale])
 
   const settingsRepository = Vue.$container.resolve(SettingRepository)
   const version = await settingsRepository.find(SettingName.Version)

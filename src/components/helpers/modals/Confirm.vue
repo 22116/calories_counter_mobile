@@ -6,8 +6,8 @@
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Cancel" @click="$emit('finished')" v-close-popup />
-        <q-btn flat label="Ok" @click="() => {$emit('success'); $emit('finished')}" v-close-popup />
+        <q-btn flat :label="$t('general.cancel')" @click="$emit('finished')" v-close-popup />
+        <q-btn flat :label="$t('general.confirm')" @click="() => {$emit('success'); $emit('finished')}" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>

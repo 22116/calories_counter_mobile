@@ -1,7 +1,7 @@
 <template>
-  <q-btn label="Create counter" color="primary" icon-right="add_task" @click="prompt = true">
+  <q-btn :label="$t('menu.create-counter')" color="primary" icon-right="add_task" @click="prompt = true">
     <state-counter
-      title='Which counter you would like to create?'
+      :title='$t("modals.counter.create.title")'
       v-model='counter'
       :show='prompt'
       @success="$emit('success', counter)"

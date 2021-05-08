@@ -7,6 +7,7 @@ export enum SettingName {
   Dark = 'dark',
   Version = 'version',
   Theme = 'theme',
+  Locale = 'locale',
 }
 
 @database(DB_NAME, 'settings')

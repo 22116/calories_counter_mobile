@@ -24,13 +24,13 @@
         <template v-else>
           <q-item>
             <q-item-section>
-              No counters data were added yet
+              {{ $t('modals.history.whitelist.empty') }}
             </q-item-section>
           </q-item>
         </template>
       </q-card-section>
       <q-card-actions align="center" class="text-primary">
-        <q-btn flat label="Close" v-close-popup />
+        <q-btn flat :label="$t('general.close')" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>

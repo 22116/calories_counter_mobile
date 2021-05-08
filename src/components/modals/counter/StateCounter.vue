@@ -10,20 +10,20 @@
         </q-carousel-slide>
         <q-carousel-slide :name="1">
           <q-card-section>
-            <div class="text-h6">Choose counter type</div>
+            <div class="text-h6">{{ $t('modals.counter.choose-type') }}</div>
           </q-card-section>
           <type v-model='counter' @input='onCounterChanged' />
         </q-carousel-slide>
         <q-carousel-slide :name="2">
           <q-card-section>
-            <div class="text-h6">When to reset</div>
+            <div class="text-h6">{{ $t('modals.counter.when-reset') }}</div>
           </q-card-section>
           <q-option-group v-model="counter.timeouts" :options="timeoutOptions" type="checkbox" />
         </q-carousel-slide>
         <q-carousel-slide :name="3">
           <q-card-section class='overflow-hidden-x'>
             <q-card-section>
-              <div class="text-h6">Counter preview</div>
+              <div class="text-h6">{{ $t('modals.counter.preview') }}</div>
             </q-card-section>
             <counter-view
               :key='counterPreviewKey'
@@ -36,9 +36,9 @@
         </q-carousel-slide>
       </q-carousel>
       <q-card-actions align="right" class="text-primary">
-        <q-btn v-if='sliderIndex > 0' flat label="Previous" @click='sliderIndex--' />
-        <q-btn flat label="Cancel" @click="$emit('cancel')" v-close-popup />
-        <q-btn flat :label="sliderIndex === 3 ? 'Confirm' : 'Next'" @click="onButtonClicked" />
+        <q-btn v-if='sliderIndex > 0' flat :label="$t('general.previous')" @click='sliderIndex--' />
+        <q-btn flat :label="$t('general.cancel')" @click="$emit('cancel')" v-close-popup />
+        <q-btn flat :label="sliderIndex === 3 ? $t('general.confirm') : $t('general.next')" @click="onButtonClicked" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -73,7 +73,7 @@ export default class StateCounter extends Vue {
 
     return options.map((timeout) => {
       return {
-        label: timeout,
+        label: this.$t('general.calendar.' + timeout.toLowerCase()),
         value: timeout.toLowerCase()
       }
     })

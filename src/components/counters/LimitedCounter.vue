@@ -18,7 +18,7 @@
     <div class="col-12 q-mt-xl">
       <div class='row'>
         <add-button class="col flex justify-end" :label="'Add'" @success="add" />
-        <confirm class="col flex justify-center q-mx-md" :label="'Reset'" :question="'Are you sure you want to reset?'" @success="reset" />
+        <confirm class="col flex justify-center q-mx-md" :label="$t('general.reset')" :question="$t('modals.counter.reset.title')" @success="reset" />
         <div class='col'>
           <q-fab class='full-height' square color="primary" icon="keyboard_arrow_up" direction="up">
             <q-fab-action

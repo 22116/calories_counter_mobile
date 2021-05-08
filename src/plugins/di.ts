@@ -1,11 +1,11 @@
-import _Vue from 'vue'
+import Vue from 'vue'
 import { container } from 'tsyringe'
 
-export default (Vue: typeof _Vue) => {
+export default (app: typeof Vue) => {
   const ioc = container
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  Vue.prototype.$container = ioc
+  app.prototype.$container = ioc
   // @ts-ignore
-  Vue.$container = ioc
+  app.$container = ioc
 }
