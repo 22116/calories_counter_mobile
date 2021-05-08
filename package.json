@@ -11,6 +11,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build --mode cordova --target android",
+    "build-web": "quasar build",
     "genkey": "keytool -genkey -v -keystore my-release-key.keystore -alias lsbproject -keyalg RSA -keysize 2048 -validity 40000",
     "sign": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore ./dist/cordova/android/apk/release/app-release-unsigned.apk lsbproject"
   },
