@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "280182434790",
+    "project_id": "dcounter-8c000",
+    "storage_bucket": "dcounter-8c000.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280182434790:android:5bb6a8850e350581248427",
+        "android_client_info": {
+          "package_name": "lsbproject.counter.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "280182434790-3d8l5k387l89k8e6b96fnb3s6q6ncpd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZYlcEO6IS5lWO9xf9--nFrT59ojCLE6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "280182434790-3d8l5k387l89k8e6b96fnb3s6q6ncpd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
