@@ -6,8 +6,8 @@
   "author": "victor.fedorenko <victor.fedorenko@mgid.com>",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js,.ts,.vue ./src",
-    "prettier": "eslint --ext .js,.ts,.vue ./src --fix",
+    "lint": "eslint --config .eslintrc.js  --ext .js,.ts,.vue ./src",
+    "prettier": "eslint --config .eslintrc.js --ext .js,.ts,.vue ./src --fix",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build --mode cordova --target android",
