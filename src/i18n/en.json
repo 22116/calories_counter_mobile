@@ -124,6 +124,7 @@
     "previous": "Previous",
     "close": "Close",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "next": "Next",
     "question": {
       "confirm": "Are you sure?"
