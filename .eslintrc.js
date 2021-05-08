@@ -77,6 +77,7 @@ module.exports = {
     'triple-slash-reference': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/require-await': 'off',
 
     semi: [2, "never"],
     // TypeScript

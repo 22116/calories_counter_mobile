@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="lsbproject.counter.app" version="1.3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="lsbproject.counter.app" version="1.4.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Daily Counter</name>
     <description>Application to count something for a daily basis</description>
     <author email="fedorenko22116@gmail.com">
@@ -33,6 +33,12 @@
         <splash density="port-xxhdpi" src="res/screen/android/splash-port-xxhdpi.png" />
         <splash density="land-xxxhdpi" src="res/screen/android/splash-land-xxxhdpi.png" />
         <splash density="port-xxxhdpi" src="res/screen/android/splash-port-xxxhdpi.png" />
+        <resource-file src="google-services.json" target="/app/google-services.json" />
+        <resource-file src="res/android/mdpi.png" target="app/src/main/res/drawable-mdpi/logo.png" />
+        <resource-file src="res/android/hdpi.png" target="app/src/main/res/drawable-hdpi/logo.png" />
+        <resource-file src="res/android/xhdpi.png" target="app/src/main/res/drawable-xhdpi/logo.png" />
+        <resource-file src="res/android/xxhdpi.png" target="app/src/main/res/drawable-xxhdpi/logo.png" />
+        <resource-file src="res/android/xxxhdpi.png" target="app/src/main/res/drawable-xxxhdpi/logo.png" />
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />

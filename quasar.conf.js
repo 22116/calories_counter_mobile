@@ -25,10 +25,11 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-      ctx.prod.prod === true ? 'sentry' : '',
+      ctx.prod ? 'sentry' : '',
       'plugins',
       'migrations',
       'setup',
+      ctx.mode.cordova ? 'pushes' : '',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

@@ -3,6 +3,7 @@ import { DB_NAME } from 'src/core/constants'
 
 @database(DB_NAME, 'counters')
 export class Counter<T extends Score> extends Table {
+  @column(ColumnType.NUMBER) rowid!: number
   @column(ColumnType.STRING | ColumnType.PRIMARY) id!: string
   @column(ColumnType.STRING) name!: string
   @column(ColumnType.STRING) description!: string
