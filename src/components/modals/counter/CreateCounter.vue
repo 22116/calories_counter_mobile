@@ -26,6 +26,7 @@ export default class CreateCounter extends Vue {
   constructor() {
     super()
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.counter = this.$container.resolve(CounterService).create() as Counter<BinaryCounterScore>
   }
 }
